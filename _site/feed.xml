@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-11-30T11:49:44+08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">万里博客</title><subtitle>功不唐捐 </subtitle><entry><title type="html">如何卸载 Ansible Tower</title><link href="http://localhost:4000/2022/11/29/how-to-uninstall-ansible-tower.html" rel="alternate" type="text/html" title="如何卸载 Ansible Tower" /><published>2022-11-29T00:00:00+08:00</published><updated>2022-11-29T00:00:00+08:00</updated><id>http://localhost:4000/2022/11/29/how-to-uninstall-ansible-tower</id><content type="html" xml:base="http://localhost:4000/2022/11/29/how-to-uninstall-ansible-tower.html"><![CDATA[<h1 id="如何卸载-ansible-tower">如何卸载 Ansible Tower</h1>
+
+<hr />
+<p><img src="https://nwzimg.wezhan.cn/contents/sitefiles2033/10168677/images/38319670.jpg" alt="Ansible" /></p>
+
+<ul>
+  <li>使用 ` ansible-tower-service stop<code class="language-plaintext highlighter-rouge"> 命令停止 Ansible 相关服务，并使用 </code>ansible-tower-service status`  命令确保服务已经停止成功。
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ansible-tower-service stop
+Stopping Tower
+Redirecting to /bin/systemctl stop rh-postgresql10-postgresql.service
+Redirecting to /bin/systemctl stop rabbitmq-server.service
+Redirecting to /bin/systemctl stop nginx.service
+Redirecting to /bin/systemctl stop supervisord.service
+</code></pre></div>    </div>
+  </li>
+  <li>将 <code class="language-plaintext highlighter-rouge">/etc/ansible</code> 和 <code class="language-plaintext highlighter-rouge">/etc/tower</code> 目录进行归档。
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">tar</span> <span class="nt">-cf</span> ansible.tar /etc/ansible
+<span class="nv">$ </span><span class="nb">tar</span> <span class="nt">-cf</span> tower.tar   /etc/tower
+</code></pre></div>    </div>
+  </li>
+  <li>另外，假设您已经使用 <code class="language-plaintext highlighter-rouge">setup.sh</code> 安装了 Ansible Tower,你可以使用以下命令进行备份 Ansible Tower。这样你可以在重新安装 Ansible Tower 后使用 <code class="language-plaintext highlighter-rouge">setup.sh -r &lt;backup file&gt;</code> 命令进行还原。
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>setup.sh <span class="nt">-b</span>
+</code></pre></div>    </div>
+  </li>
+  <li>使用 <code class="language-plaintext highlighter-rouge">yum remove</code> 命令卸载 <code class="language-plaintext highlighter-rouge">Ansible</code>，<code class="language-plaintext highlighter-rouge">RabbitMQ</code> 和 <code class="language-plaintext highlighter-rouge">Python</code>。
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>yum remove ansible-tower<span class="k">*</span>
+<span class="nv">$ </span>yum remove rabbitmq-server
+<span class="nv">$ </span>yum remove rh-python36-<span class="k">*</span>
+</code></pre></div>    </div>
+  </li>
+  <li>删除 <code class="language-plaintext highlighter-rouge">Postgres</code> 脚本。
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">rm</span> /etc/profile.d/rh-postgresql10-env.sh
+</code></pre></div>    </div>
+  </li>
+  <li>删除以下目录。
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">rm</span> <span class="nt">-rf</span> /etc/ansible
+<span class="nv">$ </span><span class="nb">rm</span> <span class="nt">-rf</span> /etc/tower
+<span class="nv">$ </span><span class="nb">rm</span> <span class="nt">-rf</span> /var/lib/pgsql
+<span class="nv">$ </span><span class="nb">rm</span> <span class="nt">-rf</span> /var/lib/awx
+<span class="nv">$ </span><span class="nb">rm</span> <span class="nt">-rf</span> /var/lib/rabbitmq
+<span class="nv">$ </span><span class="nb">rm</span> <span class="nt">-rf</span> /var/opt/rh/rh-postgresql10/lib/pgsql/data
+</code></pre></div>    </div>
+  </li>
+  <li>使用 <code class="language-plaintext highlighter-rouge">yum clean</code> 命令清除 <code class="language-plaintext highlighter-rouge">Ansible Tower</code> 软件仓库
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>yum clean metadata <span class="nt">--enablerepo</span><span class="o">=</span><span class="s2">"ansible-tower,ansible-tower-dependencies"</span>
+</code></pre></div>    </div>
+  </li>
+  <li>确保 <code class="language-plaintext highlighter-rouge">rpm</code> 命令没有输出
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rpm <span class="nt">-qa</span> | <span class="nb">grep </span>ansible-tower
+</code></pre></div>    </div>
+    <hr />
+    <blockquote>
+      <p>来源：<a href="http://www.freekb.net/Article?id=212">http://www.freekb.net/Article?id=212</a> <br />
+翻译： 邢万里</p>
+    </blockquote>
+  </li>
+</ul>]]></content><author><name></name></author><category term="ansible" /><summary type="html"><![CDATA[如何卸载 Ansible Tower 使用 ` ansible-tower-service stop 命令停止 Ansible 相关服务，并使用 ansible-tower-service status` 命令确保服务已经停止成功。 $ ansible-tower-service stop Stopping Tower Redirecting to /bin/systemctl stop rh-postgresql10-postgresql.service Redirecting to /bin/systemctl stop rabbitmq-server.service Redirecting to /bin/systemctl stop nginx.service Redirecting to /bin/systemctl stop supervisord.service 将 /etc/ansible 和 /etc/tower 目录进行归档。 $ tar -cf ansible.tar /etc/ansible $ tar -cf tower.tar /etc/tower 另外，假设您已经使用 setup.sh 安装了 Ansible Tower,你可以使用以下命令进行备份 Ansible Tower。这样你可以在重新安装 Ansible Tower 后使用 setup.sh -r &lt;backup file&gt; 命令进行还原。 $ setup.sh -b 使用 yum remove 命令卸载 Ansible，RabbitMQ 和 Python。 $ yum remove ansible-tower* $ yum remove rabbitmq-server $ yum remove rh-python36-* 删除 Postgres 脚本。 $ rm /etc/profile.d/rh-postgresql10-env.sh 删除以下目录。 $ rm -rf /etc/ansible $ rm -rf /etc/tower $ rm -rf /var/lib/pgsql $ rm -rf /var/lib/awx $ rm -rf /var/lib/rabbitmq $ rm -rf /var/opt/rh/rh-postgresql10/lib/pgsql/data 使用 yum clean 命令清除 Ansible Tower 软件仓库 $ yum clean metadata --enablerepo="ansible-tower,ansible-tower-dependencies" 确保 rpm 命令没有输出 $ rpm -qa | grep ansible-tower 来源：http://www.freekb.net/Article?id=212 翻译： 邢万里]]></summary></entry></feed>

@@ -7,7 +7,9 @@ tag: ansible
 
 ![Ansible](https://nwzimg.wezhan.cn/contents/sitefiles2033/10168677/images/38319670.jpg)
 
-* 使用 ` ansible-tower-service stop` 命令停止 Ansible 相关服务，并使用 `ansible-tower-service status`  命令确保服务已经停止成功。
+<p></p>
+
+* 使用 `ansible-tower-service stop` 命令停止 Ansible 相关服务，并使用 `ansible-tower-service status`  命令确保服务已经停止成功。
 ```bash
 $ ansible-tower-service stop
 Stopping Tower

@@ -2,7 +2,7 @@
 layout: post
 title: "如何卸载 Ansible Tower"
 date: 2022-11-29
-categories: Linux Automation
+categories: "Linux Automation"
 tag: ansible
 ---
 

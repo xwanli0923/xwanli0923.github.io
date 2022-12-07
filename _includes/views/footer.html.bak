@@ -3,8 +3,7 @@
 
   <div class="wrapper">
     <div class="site-footer-inner">
-	    <div>{{ site.copyright }} ,All Rights Reserved <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh">自由转载-非商用-非衍生-保持署名</a></div>
-      <div> 联系作者: {% if site.author %}@{{ site.author | escape }}{% endif %} Email:<a href="mailto: xingwanli@outlook.com">xingwanli@outlook.com</a></div>
+      <div>{{ site.copyright }} {% if site.author %}@{{ site.author | escape }}{% endif %}</div>
       <div>Powered by <a title="Jekyll is a simple, blog-aware, static site
       generator." href="http://jekyllrb.com/">Jekyll</a> &amp; <a title="Yat, yet
       another theme." href="https://github.com/jeffreytse/jekyll-theme-yat">Yat Theme</a>.</div>

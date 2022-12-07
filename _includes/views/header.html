@@ -11,7 +11,9 @@
 {%- endif -%}
 
 <header class="site-header {{ header_transparent_class }}" role="banner">
-
+<!-- add iconfont.css-->
+<link rel="stylesheet" href="iconfont/iconfont.css">
+<!---->
   <div class="wrapper">
     <div class="site-header-inner">
       {%- assign default_paths = site.pages | where: "dir", "/" | map: "path" -%}

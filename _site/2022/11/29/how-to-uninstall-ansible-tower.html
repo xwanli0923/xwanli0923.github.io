@@ -10,9 +10,10 @@
 <title>如何卸载 Ansible Tower | 万里博客</title>
 <meta name="generator" content="Jekyll v4.3.1">
 <meta property="og:title" content="如何卸载 Ansible Tower">
+<meta name="author" content="邢万里">
 <meta property="og:locale" content="en_US">
-<meta name="description" content='如何卸载 Ansible Tower 使用 ` ansible-tower-service stop 命令停止 Ansible 相关服务，并使用 ansible-tower-service status` 命令确保服务已经停止成功。 $ ansible-tower-service stop Stopping Tower Redirecting to /bin/systemctl stop rh-postgresql10-postgresql.service Redirecting to /bin/systemctl stop rabbitmq-server.service Redirecting to /bin/systemctl stop nginx.service Redirecting to /bin/systemctl stop supervisord.service 将 /etc/ansible 和 /etc/tower 目录进行归档。 $ tar -cf ansible.tar /etc/ansible $ tar -cf tower.tar /etc/tower 另外，假设您已经使用 setup.sh 安装了 Ansible Tower,你可以使用以下命令进行备份 Ansible Tower。这样你可以在重新安装 Ansible Tower 后使用 setup.sh -r &lt;backup file&gt; 命令进行还原。 $ setup.sh -b 使用 yum remove 命令卸载 Ansible，RabbitMQ 和 Python。 $ yum remove ansible-tower* $ yum remove rabbitmq-server $ yum remove rh-python36-* 删除 Postgres 脚本。 $ rm /etc/profile.d/rh-postgresql10-env.sh 删除以下目录。 $ rm -rf /etc/ansible $ rm -rf /etc/tower $ rm -rf /var/lib/pgsql $ rm -rf /var/lib/awx $ rm -rf /var/lib/rabbitmq $ rm -rf /var/opt/rh/rh-postgresql10/lib/pgsql/data 使用 yum clean 命令清除 Ansible Tower 软件仓库 $ yum clean metadata --enablerepo="ansible-tower,ansible-tower-dependencies" 确保 rpm 命令没有输出 $ rpm -qa | grep ansible-tower 来源：http://www.freekb.net/Article?id=212 翻译： 邢万里'>
-<meta property="og:description" content='如何卸载 Ansible Tower 使用 ` ansible-tower-service stop 命令停止 Ansible 相关服务，并使用 ansible-tower-service status` 命令确保服务已经停止成功。 $ ansible-tower-service stop Stopping Tower Redirecting to /bin/systemctl stop rh-postgresql10-postgresql.service Redirecting to /bin/systemctl stop rabbitmq-server.service Redirecting to /bin/systemctl stop nginx.service Redirecting to /bin/systemctl stop supervisord.service 将 /etc/ansible 和 /etc/tower 目录进行归档。 $ tar -cf ansible.tar /etc/ansible $ tar -cf tower.tar /etc/tower 另外，假设您已经使用 setup.sh 安装了 Ansible Tower,你可以使用以下命令进行备份 Ansible Tower。这样你可以在重新安装 Ansible Tower 后使用 setup.sh -r &lt;backup file&gt; 命令进行还原。 $ setup.sh -b 使用 yum remove 命令卸载 Ansible，RabbitMQ 和 Python。 $ yum remove ansible-tower* $ yum remove rabbitmq-server $ yum remove rh-python36-* 删除 Postgres 脚本。 $ rm /etc/profile.d/rh-postgresql10-env.sh 删除以下目录。 $ rm -rf /etc/ansible $ rm -rf /etc/tower $ rm -rf /var/lib/pgsql $ rm -rf /var/lib/awx $ rm -rf /var/lib/rabbitmq $ rm -rf /var/opt/rh/rh-postgresql10/lib/pgsql/data 使用 yum clean 命令清除 Ansible Tower 软件仓库 $ yum clean metadata --enablerepo="ansible-tower,ansible-tower-dependencies" 确保 rpm 命令没有输出 $ rpm -qa | grep ansible-tower 来源：http://www.freekb.net/Article?id=212 翻译： 邢万里'>
+<meta name="description" content="功不唐捐">
+<meta property="og:description" content="功不唐捐">
 <link rel="canonical" href="http://localhost:4000/2022/11/29/how-to-uninstall-ansible-tower.html">
 <meta property="og:url" content="http://localhost:4000/2022/11/29/how-to-uninstall-ansible-tower.html">
 <meta property="og:site_name" content="万里博客">
@@ -21,7 +22,7 @@
 <meta name="twitter:card" content="summary">
 <meta property="twitter:title" content="如何卸载 Ansible Tower">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-11-29T00:00:00+08:00","datePublished":"2022-11-29T00:00:00+08:00","description":"如何卸载 Ansible Tower 使用 ` ansible-tower-service stop 命令停止 Ansible 相关服务，并使用 ansible-tower-service status` 命令确保服务已经停止成功。 $ ansible-tower-service stop Stopping Tower Redirecting to /bin/systemctl stop rh-postgresql10-postgresql.service Redirecting to /bin/systemctl stop rabbitmq-server.service Redirecting to /bin/systemctl stop nginx.service Redirecting to /bin/systemctl stop supervisord.service 将 /etc/ansible 和 /etc/tower 目录进行归档。 $ tar -cf ansible.tar /etc/ansible $ tar -cf tower.tar /etc/tower 另外，假设您已经使用 setup.sh 安装了 Ansible Tower,你可以使用以下命令进行备份 Ansible Tower。这样你可以在重新安装 Ansible Tower 后使用 setup.sh -r &lt;backup file&gt; 命令进行还原。 $ setup.sh -b 使用 yum remove 命令卸载 Ansible，RabbitMQ 和 Python。 $ yum remove ansible-tower* $ yum remove rabbitmq-server $ yum remove rh-python36-* 删除 Postgres 脚本。 $ rm /etc/profile.d/rh-postgresql10-env.sh 删除以下目录。 $ rm -rf /etc/ansible $ rm -rf /etc/tower $ rm -rf /var/lib/pgsql $ rm -rf /var/lib/awx $ rm -rf /var/lib/rabbitmq $ rm -rf /var/opt/rh/rh-postgresql10/lib/pgsql/data 使用 yum clean 命令清除 Ansible Tower 软件仓库 $ yum clean metadata --enablerepo=&quot;ansible-tower,ansible-tower-dependencies&quot; 确保 rpm 命令没有输出 $ rpm -qa | grep ansible-tower 来源：http://www.freekb.net/Article?id=212 翻译： 邢万里","headline":"如何卸载 Ansible Tower","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2022/11/29/how-to-uninstall-ansible-tower.html"},"url":"http://localhost:4000/2022/11/29/how-to-uninstall-ansible-tower.html"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"邢万里"},"dateModified":"2022-11-29T00:00:00+08:00","datePublished":"2022-11-29T00:00:00+08:00","description":"功不唐捐","headline":"如何卸载 Ansible Tower","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2022/11/29/how-to-uninstall-ansible-tower.html"},"url":"http://localhost:4000/2022/11/29/how-to-uninstall-ansible-tower.html"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="shortcut icon" href="favicon.ico">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -245,7 +246,6 @@ document.addEventListener('DOMContentLoaded', function(event) {
 
 
 <header class="site-header " role="banner">
-
   <div class="wrapper">
     <div class="site-header-inner">
 <span class="site-brand"><a class="site-brand-inner" rel="author" href="/">
@@ -263,114 +263,11 @@ document.addEventListener('DOMContentLoaded', function(event) {
           </label>
 
           <div class="trigger">
-<a class="page-link" href="/about.html">ABOUT</a><a class="page-link" href="/archives.html">ARCHIVES</a><a class="page-link" href="/categories.html">CATEGORIES</a><a class="page-link" href="/">HOME</a><a class="page-link" href="/tags.html">TAGS</a>
+<a class="page-link" href="/about.html">关于</a><a class="page-link" href="/archives.html">归档</a><a class="page-link" href="/categories.html">分类</a><a class="page-link" href="/">主页</a><a class="page-link" href="/tags.html">标签</a>
 
 
 
 
-<span class="page-link">
-
-<div id="google_translate_element" style="display: none;">
-</div>
-
-<span class="ct-language">
-  <ul class="list-unstyled ct-language-dropdown">
-    
-      <li>
-        <a href="#" class="lang-select" data-lang="zh-CN">
-          
-          <img src="https://cdn.countryflags.com/thumbs/china/flag-400.png" title="Chinese(Simple)">
-          
-        </a>
-      </li>
-    
-      <li>
-        <a href="#" class="lang-select" data-lang="en">
-          
-          <img src="https://cdn.countryflags.com/thumbs/united-states-of-america/flag-400.png" title="English">
-          
-        </a>
-      </li>
-    
-  </ul>
-</span>
-
-<script type="text/javascript">
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({
-    pageLanguage: '',
-    autoDisplay: false,
-    layout: google.translate.TranslateElement.InlineLayout.VERTICAL
-  }, 'google_translate_element');
-
-  function restoreLang() {
-    var iframe = document.getElementsByClassName('goog-te-banner-frame')[0];
-    if (!iframe) return;
-
-    var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-    var restore_el = innerDoc.getElementsByTagName("button");
-
-    for (var i = 0; i < restore_el.length; i++) {
-      if (restore_el[i].id.indexOf("restore") >= 0) {
-        restore_el[i].click();
-        var close_el = innerDoc.getElementsByClassName("goog-close-link");
-        close_el[0].click();
-        return;
-      }
-    }
-  }
-
-  function triggerHtmlEvent(element, eventName) {
-    var event;
-    if (document.createEvent) {
-      event = document.createEvent('HTMLEvents');
-      event.initEvent(eventName, true, true);
-      element.dispatchEvent(event);
-    } else {
-      event = document.createEventObject();
-      event.eventType = eventName;
-      element.fireEvent('on' + event.eventType, event);
-    }
-  }
-
-  var googleCombo = document.querySelector("select.goog-te-combo");
-  var langSelect = document.querySelector('.ct-language');
-  langSelect.addEventListener('click', function(event) {
-    if (!event.target) {
-      return;
-    }
-
-    var selected = document.querySelector('.ct-language .ct-language-selected');
-    if (selected) {
-      selected.classList.remove('ct-language-selected');
-    }
-
-    var target = event.target;
-    while (target && target !== langSelect ) {
-      if (target.matches('.lang-select')) {
-        break;
-      }
-      target = target.parentElement;
-    }
-
-    if (target && target.matches('.lang-select')) {
-      var lang = target.getAttribute('data-lang');
-      if (googleCombo.value == lang) {
-        restoreLang();
-      } else {
-        target.parentElement.classList.add('ct-language-selected');
-        googleCombo.value = lang;
-        triggerHtmlEvent(googleCombo, 'change');
-      }
-    }
-
-    event.preventDefault();
-  });
-}
-</script>
-
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-</span>
 </div>
         </nav>
 </div>
@@ -765,13 +662,12 @@ function googleTranslateElementInit() {
 
     <div class="post-content e-content" itemprop="articleBody">
 
-      <h1 id="如何卸载-ansible-tower">如何卸载 Ansible Tower</h1>
+      <p><img src="https://nwzimg.wezhan.cn/contents/sitefiles2033/10168677/images/38319670.jpg" alt="Ansible"></p>
 
-<hr>
-<p><img src="https://nwzimg.wezhan.cn/contents/sitefiles2033/10168677/images/38319670.jpg" alt="Ansible"></p>
+<p></p>
 
 <ul>
-  <li>使用 ` ansible-tower-service stop<code class="language-plaintext highlighter-rouge"> 命令停止 Ansible 相关服务，并使用 </code>ansible-tower-service status`  命令确保服务已经停止成功。
+  <li>使用 <code class="language-plaintext highlighter-rouge">ansible-tower-service stop</code> 命令停止 Ansible 相关服务，并使用 <code class="language-plaintext highlighter-rouge">ansible-tower-service status</code>  命令确保服务已经停止成功。
     <div class="language-bash highlighter-rouge">
 <div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ansible-tower-service stop
 Stopping Tower
@@ -978,15 +874,32 @@ Redirecting to /bin/systemctl stop supervisord.service
       </div>
     </main><footer class="site-footer h-card">
   <data class="u-url" href="/"></data>
-
   <div class="wrapper">
     <div class="site-footer-inner">
-      <div>Copyright © 邢万里 xingwanli@outlook.com </div>
+	    <div>Copyright © 2022 ,All Rights Reserved <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh">自由转载-非商用-非衍生-保持署名</a>
+</div>
+        <!--
+      <div> Contact: <a mailto: xingwanli@outlook.com">xingwanli@outlook.com</a>  
+        <span class="qrcode" 
+	       style="display:inline-block;vertical-align:middle;
+	  		        background: #fff url(wechat/wechat-logo.svg) center top no-repeat;background-size: cover;
+	  		        height: 30px;width: 33px;">
+	              <img src="wechat/wechat.svg">
+        </span>
+      </div> 
+      -->
       <div>Powered by <a title="Jekyll is a simple, blog-aware, static site
       generator." href="http://jekyllrb.com/">Jekyll</a> &amp; <a title="Yat, yet
-      another theme." href="https://github.com/jeffreytse/jekyll-theme-yat">Yat Theme</a>.</div>
-      <div class="footer-col rss-subscribe">Subscribe <a href="/feed.xml">via RSS</a>
-</div>
+      another theme." href="https://github.com/jeffreytse/jekyll-theme-yat">Yat Theme</a> | <a href="https://github.com/xwanli0923/linuxtechdocs">Linux学习文档</a> | <a href="https://www.kernel.org/doc/man-pages/">man-pages</a>
+      <!-- <class="footer-col rss-subscribe">Subscribe <a href="/feed.xml">via RSS</a></div> -->
+      <!--
+      <iframe
+        style="margin-left: 2px; margin-bottom:-5px;"
+        frameborder="0" scrolling="0" width="91px" height="20px"
+        src="https://ghbtns.com/github-btn.html?user=xwanli0923&repo=linuxtechdocs&type=star&count=true" >
+       </iframe>
+       -->
+       </div>
     </div>
   </div>
 </footer>

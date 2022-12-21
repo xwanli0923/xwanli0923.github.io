@@ -49,6 +49,7 @@ ceph version 17.2.5 (98318ae89f1a893a6ded3a640405cdbb33e08757) quincy (stable)
 ```
 
 2. 我们可以在 [quay.io](https://quay.io/repository/ceph/ceph) 和 [docker.io](https://hub.docker.com/r/ceph/ceph)获得 `ceph` 相关的可用镜像，但是 `docker hub` 上的镜像更新速度有可能比 `quay.io`的慢，我们这里选择使用 `quay.io` 的镜像文件:
+  
   2.1. 安装 `jq` 工具
 
    ```shell
@@ -66,6 +67,7 @@ ceph version 17.2.5 (98318ae89f1a893a6ded3a640405cdbb33e08757) quincy (stable)
    ```
 
 3. 创建一个`JSON`文件保护敏感信息,例如为 `auth.json`
+
 $ mdkir /root/ceph-cluster
 $ cd /root/ceph-cluster
 ```json

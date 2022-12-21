@@ -1,4 +1,442 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-12-09T19:07:47+08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">万里博客</title><subtitle>功不唐捐 </subtitle><author><name>邢万里</name></author><entry><title type="html">如何卸载 Ansible Tower</title><link href="http://localhost:4000/2022/11/29/how-to-uninstall-ansible-tower.html" rel="alternate" type="text/html" title="如何卸载 Ansible Tower" /><published>2022-11-29T00:00:00+08:00</published><updated>2022-11-29T00:00:00+08:00</updated><id>http://localhost:4000/2022/11/29/how-to-uninstall-ansible-tower</id><content type="html" xml:base="http://localhost:4000/2022/11/29/how-to-uninstall-ansible-tower.html"><![CDATA[<p><img src="https://nwzimg.wezhan.cn/contents/sitefiles2033/10168677/images/38319670.jpg" alt="Ansible" /></p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-12-21T18:06:27+08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">万里博客</title><subtitle>功不唐捐 </subtitle><author><name>邢万里</name></author><entry><title type="html">开始部署 CEPH 集群</title><link href="http://localhost:4000/2022/12/21/deploying-ceph-cluster.html" rel="alternate" type="text/html" title="开始部署 CEPH 集群" /><published>2022-12-21T00:00:00+08:00</published><updated>2022-12-21T00:00:00+08:00</updated><id>http://localhost:4000/2022/12/21/deploying-ceph-cluster</id><content type="html" xml:base="http://localhost:4000/2022/12/21/deploying-ceph-cluster.html"><![CDATA[<p><img src="/assets/images/2022-12-21/photo-jelly-fish-01.jpg" alt="Ceph" />
+<em>[图片来源 ceph.io]</em></p>
+
+<h2 id="文档说明">文档说明</h2>
+
+<ul>
+  <li>系统版本：CentOS-Stream-8-x86_64-20221125</li>
+  <li>内核版本：4.18.0-408</li>
+  <li>podman 版本:4.2.0</li>
+  <li>ceph 版本： Quincy</li>
+  <li>客户端配置：
+    <ul>
+      <li><strong>ceph-clienta</strong>
+        <ul>
+          <li>CPU: 2vCPU</li>
+          <li>Memory: 4GiB</li>
+          <li>Storage: 10GiBx5</li>
+        </ul>
+      </li>
+      <li><strong>ceph-clientb</strong>
+        <ul>
+          <li>CPU: 2vCPU</li>
+          <li>Memory: 4GiB</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>集群节点配置：
+    <ul>
+      <li><strong>ceph-serverc</strong>、<strong>ceph-serverd</strong>和<strong>ceph-servere</strong>
+        <ul>
+          <li>CPU: 2vCPU</li>
+          <li>Memory: 4GiB</li>
+          <li>Storage: 10GiBx5</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="查找合适的镜像">查找合适的镜像</h2>
+
+<ol>
+  <li>以 <strong>admin</strong> 身份登录 <strong>ceph-serverc</strong>, 使用 <strong>cephadm</strong> 验证当前的版本
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo</span> <span class="nt">-i</span>
+<span class="nv">$ </span>cephadm version
+Using ceph image with <span class="nb">id</span> <span class="s1">'cc65afd6173a'</span> and tag <span class="s1">'v17'</span> created on 2022-10-17 23:41:41 +0000 UTC
+quay.io/ceph/ceph@sha256:0560b16bec6e84345f29fb6693cd2430884e6efff16a95d5bdd0bb06d7661c45
+ceph version 17.2.5 <span class="o">(</span>98318ae89f1a893a6ded3a640405cdbb33e08757<span class="o">)</span> quincy <span class="o">(</span>stable<span class="o">)</span>
+</code></pre></div>    </div>
+  </li>
+  <li>我们可以在 <a href="https://quay.io/repository/ceph/ceph">quay.io</a> 和 <a href="https://hub.docker.com/r/ceph/ceph">docker.io</a>获得 <strong>ceph</strong> 相关的可用镜像，但是 <strong>docker hub</strong> 上的镜像更新速度有可能比 <strong>quay.io</strong> 的慢，我们这里选择使用 <strong>quay.io</strong> 的镜像文件:
+    <ul>
+      <li>安装 <strong>jq</strong> 工具
+        <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>dnf <span class="nb">install </span>jq 
+</code></pre></div>        </div>
+      </li>
+      <li>查找镜像仓库中可用的镜像版本
+        <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl <span class="nt">-ddds</span> <span class="nt">-L</span> https://quay.io/api/v1/repository/ceph/ceph/tag?page_size<span class="o">=</span>100 | jq <span class="s1">'."tags"[] .name'</span> | <span class="nb">grep</span> <span class="s1">'17.*'</span>
+<span class="s2">"v17.2"</span>
+<span class="s2">"v17"</span>
+<span class="s2">"v17.2.5"</span>
+....ommit....
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="准备进行部署">准备进行部署</h2>
+
+<ol>
+  <li>创建一个 <strong>JSON</strong> 文件保护敏感信息,例如为 <strong>auth.json</strong>
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mdkir /root/ceph-cluster
+<span class="nv">$ </span><span class="nb">cd</span> /root/ceph-cluster
+<span class="nv">$ </span><span class="nb">cat </span>auth.json
+<span class="o">{</span>
+<span class="s2">"url"</span>:<span class="s2">"quay.io"</span>,
+<span class="s2">"username"</span>:<span class="s2">"YOUR QUAY ACCOUNT"</span>,
+<span class="s2">"password"</span>:<span class="s2">"YOUR QUAY ACCOUNT PASSWORD"</span>
+<span class="o">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>运行 <strong>cephadm bootstrap</strong> 命令创建一个ceph集群
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># man cephadm  | grep -A 29 'cephadm bootstrap'</span>
+<span class="nv">$ </span>cephadm bootstrap <span class="nt">--cluster-network</span> 172.16.90.0/24 <span class="se">\</span>
+<span class="nt">--mon-ip</span> 172.16.80.104 <span class="se">\</span>
+<span class="nt">--initial-dashboard-password</span> YOUR_PASSWORD <span class="se">\</span>
+<span class="nt">--dashboard-password-noupdate</span> <span class="se">\</span>
+<span class="nt">--allow-fqdn-hostname</span> <span class="se">\</span>
+<span class="nt">--registry-json</span> auth.json
+   
+   
+Ceph Dashboard is now available at:
+   
+             URL: https://ceph-serverc.lab.example.net:8443/
+            User: admin
+        Password: YOUR_PASSWORD
+   
+Enabling client.admin keyring and conf on hosts with <span class="s2">"admin"</span> label
+Saving cluster configuration to /var/lib/ceph/5851a2e4-80f0-11ed-9d85-000c291c7df8/config directory
+Enabling autotune <span class="k">for </span>osd_memory_target
+You can access the Ceph CLI as following <span class="k">in case</span> of multi-cluster or non-default config:
+   
+        <span class="nb">sudo</span> /usr/sbin/cephadm shell <span class="nt">--fsid</span> 5851a2e4-80f0-11ed-9d85-000c291c7df8 <span class="nt">-c</span> /etc/ceph/ceph.conf <span class="nt">-k</span> /etc/ceph/ceph.client.admin.keyring
+   
+Or, <span class="k">if </span>you are only running a single cluster on this host:
+   
+        <span class="nb">sudo</span> /usr/sbin/cephadm shell
+   
+Please consider enabling telemetry to <span class="nb">help </span>improve Ceph:
+   
+        ceph telemetry on
+   
+For more information see:
+   
+        https://docs.ceph.com/docs/master/mgr/telemetry/
+   
+Bootstrap complete.
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="验证结果">验证结果</h2>
+
+<ol>
+  <li>验证集群状态
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>cephadm shell <span class="nt">--</span> ceph <span class="nt">-s</span>
+Inferring fsid 5851a2e4-80f0-11ed-9d85-000c291c7df8
+Inferring config /var/lib/ceph/5851a2e4-80f0-11ed-9d85-000c291c7df8/mon.ceph-serverc.lab.example.net/config
+Using ceph image with <span class="nb">id</span> <span class="s1">'cc65afd6173a'</span> and tag <span class="s1">'v17'</span> created on 2022-10-17 23:41:41 +0000 UTC
+quay.io/ceph/ceph@sha256:0560b16bec6e84345f29fb6693cd2430884e6efff16a95d5bdd0bb06d7661c45
+  cluster:
+    <span class="nb">id</span>:     5851a2e4-80f0-11ed-9d85-000c291c7df8
+    health: HEALTH_WARN
+            OSD count 0 &lt; osd_pool_default_size 3
+   
+  services:
+    mon: 1 daemons, quorum ceph-serverc.lab.example.net <span class="o">(</span>age 3m<span class="o">)</span>
+    mgr: ceph-serverc.lab.example.net.erqjrd<span class="o">(</span>active, since 2m<span class="o">)</span>
+    osd: 0 osds: 0 up, 0 <span class="k">in
+   
+  </span>data:
+    pools:   0 pools, 0 pgs
+    objects: 0 objects, 0 B
+    usage:   0 B used, 0 B / 0 B avail
+    pgs:
+</code></pre></div>    </div>
+  </li>
+  <li>访问其<code class="language-plaintext highlighter-rouge">dashboard</code>
+    <ul>
+      <li>
+        <p>在浏览器输入 <em>https://ceph-serverc.lab.example.net:8443</em> 或 <em>https://172.16.80.104:8443</em>，弹出的证书警告同意即可
+<img src="/assets/images/2022-12-21/ceph-dashboard.png" alt="ceph dashboard" /></p>
+      </li>
+      <li>
+        <p>输入账户<code class="language-plaintext highlighter-rouge">admin</code>和设置的密码，将会看到概览界面
+<img src="/assets/images/2022-12-21/ceph-dashboard-initial.png" alt="ceph dashboard expand cluster" />
+<img src="/assets/images/2022-12-21/ceph-dashboard-overview.png" alt="ceph dashboard expand cluster" /></p>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="增加主机和设备">增加主机和设备</h2>
+
+<ol>
+  <li>安装集群公共SSH公钥
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ceph cephadm get-pub-key <span class="o">&gt;</span> /root/ceph-cluster/ceph-cluster.pub
+<span class="nv">$ </span> <span class="k">for </span>HOSTS <span class="k">in </span>ceph-<span class="o">{</span>clienta,clientb,serverc,serverd,servere<span class="o">}</span><span class="p">;</span> <span class="se">\</span>
+    <span class="k">do </span>ssh-copy-id <span class="nt">-f</span> <span class="nt">-i</span> /root/ceph-cluster/ceph-cluster.pub root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span><span class="p">;</span> <span class="se">\</span>
+    <span class="k">done</span>
+</code></pre></div>    </div>
+  </li>
+  <li>添加新的主机到集群
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ceph orch host add ceph-clienta.lab.example.net
+Added host <span class="s1">'ceph-clienta.lab.example.net'</span> with addr <span class="s1">'172.16.80.102'</span>
+   
+<span class="nv">$ </span>ceph orch host add ceph-serverc.lab.example.net
+Added host <span class="s1">'ceph-serverc.lab.example.net'</span> with addr <span class="s1">'172.16.80.104'</span>
+   
+<span class="nv">$ </span>ceph orch host add ceph-serverd.lab.example.net
+Added host <span class="s1">'ceph-serverd.lab.example.net'</span> with addr <span class="s1">'172.16.80.105'</span>
+   
+<span class="nv">$ </span>ceph orch host add ceph-servere.lab.example.net
+Added host <span class="s1">'ceph-servere.lab.example.net'</span> with addr <span class="s1">'172.16.80.106'</span>
+</code></pre></div>    </div>
+  </li>
+  <li>增加新的 OSD
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ceph orch daemon add osd ceph-serverc.lab.example.net:/dev/sdb
+Created osd<span class="o">(</span>s<span class="o">)</span> 0 on host <span class="s1">'ceph-serverc.lab.example.net'</span>
+   
+<span class="nv">$ </span>ceph orch daemon add osd ceph-serverc.lab.example.net:/dev/sdc
+Created osd<span class="o">(</span>s<span class="o">)</span> 1 on host <span class="s1">'ceph-serverc.lab.example.net'</span>
+   
+<span class="nv">$ </span>ceph orch daemon add osd ceph-serverc.lab.example.net:/dev/sdd
+Created osd<span class="o">(</span>s<span class="o">)</span> 2 on host <span class="s1">'ceph-serverc.lab.example.net'</span>
+   
+<span class="nv">$ </span>ceph orch daemon add osd ceph-serverd.lab.example.net:/dev/sdb
+Created osd<span class="o">(</span>s<span class="o">)</span> 3 on host <span class="s1">'ceph-serverd.lab.example.net'</span>
+   
+<span class="nv">$ </span>ceph orch daemon add osd ceph-serverd.lab.example.net:/dev/sdc
+Created osd<span class="o">(</span>s<span class="o">)</span> 4 on host <span class="s1">'ceph-serverd.lab.example.net'</span>
+   
+<span class="nv">$ </span>ceph orch daemon add osd ceph-serverd.lab.example.net:/dev/sdd
+Created osd<span class="o">(</span>s<span class="o">)</span> 5 on host <span class="s1">'ceph-serverd.lab.example.net'</span>
+   
+<span class="nv">$ </span>ceph orch daemon add osd ceph-servere.lab.example.net:/dev/sdb
+Created osd<span class="o">(</span>s<span class="o">)</span> 6 on host <span class="s1">'ceph-servere.lab.example.net'</span>
+   
+<span class="nv">$ </span>ceph orch daemon add osd ceph-servere.lab.example.net:/dev/sdc
+Created osd<span class="o">(</span>s<span class="o">)</span> 7 on host <span class="s1">'ceph-servere.lab.example.net'</span>
+   
+<span class="nv">$ </span>ceph orch daemon add osd ceph-servere.lab.example.net:/dev/sdd
+Created osd<span class="o">(</span>s<span class="o">)</span> 8 on host <span class="s1">'ceph-servere.lab.example.net'</span>
+</code></pre></div>    </div>
+  </li>
+  <li>最终的 <strong>ceph</strong> 集群状态
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cephadm shell
+Inferring fsid 5851a2e4-80f0-11ed-9d85-000c291c7df8
+Inferring config /var/lib/ceph/5851a2e4-80f0-11ed-9d85-000c291c7df8/mon.ceph-serverc.lab.example.net/config
+Using ceph image with <span class="nb">id</span> <span class="s1">'cc65afd6173a'</span> and tag <span class="s1">'v17'</span> created on 2022-10-17 23:41:41 +0000 UTC
+quay.io/ceph/ceph@sha256:0560b16bec6e84345f29fb6693cd2430884e6efff16a95d5bdd0bb06d7661c45
+<span class="o">[</span>ceph: root@ceph-serverc /]# ceph <span class="nt">-s</span>
+  cluster:
+    <span class="nb">id</span>:     5851a2e4-80f0-11ed-9d85-000c291c7df8
+    health: HEALTH_OK
+   
+  services:
+    mon: 4 daemons, quorum ceph-serverc.lab.example.net,ceph-clienta,ceph-serverd,ceph-servere <span class="o">(</span>age 6m<span class="o">)</span>
+    mgr: ceph-serverc.lab.example.net.erqjrd<span class="o">(</span>active, since 25m<span class="o">)</span>, standbys: ceph-clienta.kbhjvx
+    osd: 9 osds: 9 up <span class="o">(</span>since 110s<span class="o">)</span>, 9 <span class="k">in</span> <span class="o">(</span>since 2m<span class="o">)</span>
+   
+  data:
+    pools:   1 pools, 1 pgs
+    objects: 2 objects, 577 KiB
+    usage:   591 MiB used, 89 GiB / 90 GiB avail
+    pgs:     1 active+clean
+</code></pre></div>    </div>
+
+    <p><img src="/assets/images/2022-12-21/ceph-dashboard-new-view.png" alt="dashboard new view" /></p>
+  </li>
+</ol>
+
+<hr />
+<blockquote>
+  <p>参考文档：
+ceph-container: <a href="https://github.com/ceph/ceph-container/blob/main/README.md">https://github.com/ceph/ceph-container</a>
+Ceph Document: <a href="https://docs.ceph.com/en/latest/cephadm/host-management/#cephadm-adding-hosts">cephadm-adding-hosts</a></p>
+</blockquote>]]></content><author><name>邢万里</name></author><category term="ceph" /><summary type="html"><![CDATA[[图片来源 ceph.io]]]></summary></entry><entry><title type="html">部署CEPH集群前的准备工作</title><link href="http://localhost:4000/2022/12/19/preparing-for-ceph-cluster-deployment.html" rel="alternate" type="text/html" title="部署CEPH集群前的准备工作" /><published>2022-12-19T00:00:00+08:00</published><updated>2022-12-19T00:00:00+08:00</updated><id>http://localhost:4000/2022/12/19/preparing-for-ceph-cluster-deployment</id><content type="html" xml:base="http://localhost:4000/2022/12/19/preparing-for-ceph-cluster-deployment.html"><![CDATA[<p><img src="/assets/images/2022-12-19/photo-squid-02.jpg" alt="Ceph" />
+<em>[图片来源 ceph.io]</em></p>
+
+<h2 id="文档说明">文档说明</h2>
+
+<ul>
+  <li>系统版本：CentOS-Stream-8-x86_64-20221125</li>
+  <li>内核版本：4.18.0-408</li>
+  <li>podman 版本:4.2.0</li>
+  <li>ceph 版本： Quincy</li>
+  <li>其他要求： <strong>git</strong>、<strong>LVM2</strong>、<strong>python3.6.8</strong></li>
+  <li>客户端配置：
+    <ul>
+      <li><strong>ceph-clienta</strong>
+        <ul>
+          <li>CPU: 2vCPU</li>
+          <li>Memory: 4GiB</li>
+          <li>Storage: 10GiBx5</li>
+        </ul>
+      </li>
+      <li><strong>ceph-clientb</strong>
+        <ul>
+          <li>CPU: 2vCPU</li>
+          <li>Memory: 4GiB</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p><em>ceph-clienta 充当ceph集群客户端的同时，也充当ceph的管理端</em></p>
+
+<ul>
+  <li>集群节点配置：
+    <ul>
+      <li><strong>ceph-serverc</strong>、<strong>ceph-serverd</strong>和<strong>ceph-servere</strong>
+        <ul>
+          <li>CPU: 2vCPU</li>
+          <li>Memory: 4GiB</li>
+          <li>Storage: 10GiBx5</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>网络信息：
+<strong>public_network</strong>: 172.16.80.0/24
+<strong>cluster_network</strong>: 172.16.90.0/24</li>
+</ul>
+
+<h2 id="安装-cephadm">安装 CEPHADM</h2>
+
+<ol>
+  <li>使用 <strong>root</strong> 账户登录到 <strong>ceph-serverc</strong> 节点
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>dnf <span class="nb">install</span> <span class="nt">-y</span> centos-release-ceph-quincy
+<span class="nv">$ </span>dnf <span class="nb">install</span> <span class="nt">-y</span> cephadm vim bash-completion git ansible
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="设置系统">设置系统</h2>
+
+<ol>
+  <li>在 <strong>clientc</strong> 创建 <strong>admin</strong> 账户，并设置其为免认证 <strong>SUDO</strong>
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>useradd admin
+<span class="nv">$ </span>passwd admin
+<span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"admin ALL=(ALL) NOPASSWD:ALL"</span> <span class="o">&gt;</span> /etc/sudoers.d/admin
+<span class="nv">$ </span><span class="nb">chmod </span>0400 /etc/sudoers.d/admin
+</code></pre></div>    </div>
+  </li>
+  <li>在 <strong>clientc</strong> 上创建免密码认证的 <strong>ssh</strong> 密钥对，并复制到 <strong>admin</strong> 家目录
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssh-keygen <span class="nt">-q</span> <span class="nt">-t</span> rsa <span class="nt">-f</span> ~/.ssh/id_rsa <span class="nt">-N</span> <span class="s1">''</span>
+<span class="nv">$ </span><span class="nb">cp</span> <span class="nt">-r</span> ~/.ssh  ~admin/.ssh
+<span class="nv">$ </span><span class="nb">chown</span> <span class="nt">-R</span> admin: ~admin/.ssh
+<span class="nv">$ </span>ssh-copy-id root@localhost
+</code></pre></div>    </div>
+  </li>
+  <li>根据自己的情况，编写本地主机名解析文件 <strong>/etc/hosts</strong>,追加以下内容
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>172.16.80.102 ceph-clienta.lab.example.net ceph-clienta
+172.16.80.103 ceph-clientb.lab.example.net ceph-clientb
+172.16.80.104 ceph-serverc.lab.example.net ceph-serverc
+172.16.80.105 ceph-serverd.lab.example.net ceph-serverd
+172.16.80.106 ceph-servere.lab.example.net ceph-servere
+</code></pre></div>    </div>
+  </li>
+  <li>将上述创建的用户，文件等在其他节点同样创建
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="k">for </span>HOSTS <span class="k">in </span>ceph-<span class="o">{</span>clienta,clientb,serverc,serverd,servere<span class="o">}</span>
+  <span class="k">do
+   </span>scp <span class="nt">-r</span> /root/.ssh root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span>:/root/.ssh
+   scp  /etc/hosts root@<span class="o">{</span>HOSTS<span class="o">}</span>:/etc/hosts
+   ssh root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span> <span class="s2">"useradd admin"</span>
+   ssh root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span> <span class="s2">"echo YOUR_ADMIN_PASSWORD | passwd --stdin admin"</span>
+   scp /etc/sudoers.d/admin root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span>:/etc/sudoers.d/admin
+   ssh root@<span class="o">{</span>HOSTS<span class="o">}</span> <span class="s2">"chmod 0400 /etc/sudoers.d/admin"</span>
+   scp <span class="nt">-r</span> /root/.ssh root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span>:/home/admin/.ssh
+   ssh root@<span class="o">{</span>HOSTS<span class="o">}</span> <span class="s2">"chown -R admin: /home/admin/.ssh"</span>
+  <span class="k">done</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="准备-cephadm-ansible">准备 cephadm-ansible</h2>
+
+<ol>
+  <li>使用 <strong>git clone</strong> 命令下载 <strong>cephadm-ansible</strong>:
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>git clone <span class="nt">-b</span> quincy https://github.com/ceph/cephadm-ansible.git
+<span class="nv">$ </span><span class="nb">cd </span>cephadm-ansible/
+</code></pre></div>    </div>
+  </li>
+  <li>在 <strong>cephadm-adnible</strong> 下创建 <strong>hosts</strong> 清单文件:
+    <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">ceph-clienta.lab.example.net</span>
+<span class="err">ceph-clientb.lab.example.net</span>
+<span class="err">ceph-serverc.lab.example.net</span>
+<span class="err">ceph-serverd.lab.example.net</span>
+<span class="err">ceph-servere.lab.example.net</span>
+   
+<span class="nn">[clients]</span>
+<span class="err">ceph-clienta.lab.example.net</span>
+<span class="err">ceph-clientb.lab.example.net</span>
+   
+<span class="nn">[admin]</span>
+<span class="err">ceph-clienta.lab.example.net</span>
+</code></pre></div>    </div>
+  </li>
+  <li>测试清单中的主机，并执行 <strong>cephadm-preflight.yml</strong>
+    <ul>
+      <li>测试主机的连通性和用户
+        <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ansible <span class="nt">-i</span> hosts <span class="nt">--list-hosts</span> all
+  hosts <span class="o">(</span>4<span class="o">)</span>:
+     ceph-serverc.lab.example.net
+     ceph-serverd.lab.example.net
+     ceph-servere.lab.example.net
+     ceph-clienta.lab.example.net
+     ceph-clientb.lab.example.net
+       
+<span class="nv">$ </span>ansible <span class="nt">-i</span> hosts <span class="nt">-m</span> ping all
+<span class="nv">$ </span>ansible all <span class="nt">-i</span> hosts  <span class="nt">-u</span> admin <span class="nt">-b</span> <span class="nt">-m</span> ping
+</code></pre></div>        </div>
+      </li>
+      <li>查看 <strong>cephadm-preflight.yml</strong>
+        <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Usage:</span>
+<span class="c1">#</span>
+<span class="c1"># ansible-playbook -i &lt;inventory host file&gt; cephadm-preflight.yml</span>
+<span class="c1">#</span>
+<span class="c1"># You can limit the execution to a set of hosts by using `--limit` option:</span>
+<span class="c1">#</span>
+<span class="c1"># ansible-playbook -i &lt;inventory host file&gt; cephadm-preflight.yml --limit &lt;my_osd_group|my_node_name&gt;</span>
+<span class="c1">#</span>
+<span class="c1"># You can override variables using `--extra-vars` parameter:</span>
+<span class="c1">#</span>
+<span class="c1"># ansible-playbook -i &lt;inventory host file&gt; cephadm-preflight.yml --extra-vars "ceph_origin=rhcs"</span>
+<span class="c1">#</span>
+</code></pre></div>        </div>
+      </li>
+      <li>使用 <strong>–extra-vars “ceph_origin=community</strong> 执行 <strong>cephadm-preflight.yml</strong>
+        <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span> ansible-playbook <span class="nt">-i</span> hosts <span class="nt">--extra-vars</span> <span class="s2">"ceph_origin=community"</span> cephadm-preflight.yml
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="设置默认登录账户可选">设置默认登录账户(可选)</h2>
+
+<ol>
+  <li>在 <strong>root</strong> 和 <strong>admin</strong> 的 <strong>$HOME/.ssh/config</strong> 中增加以下内容(没有则创建该文件)：
+    <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">Host</span> <span class="err">*.lab.example.net</span>
+  <span class="err">User</span> <span class="err">root</span>
+  <span class="err">StrictHostKeyChecking</span> <span class="err">no</span>
+  <span class="err">UserKnownHostsFile</span> <span class="err">/dev/null</span>
+</code></pre></div>    </div>
+  </li>
+  <li>将上述文件分别复制到其他节点的对应用户家目录中：
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="k">for </span>HOSTS <span class="k">in </span>ceph-<span class="o">{</span>clienta,clientb,serverc,serverd,servere<span class="o">}</span>
+ <span class="k">do
+    </span>scp /root/.ssh/config root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span>:~/.ssh/config
+    scp /home/admin/.ssh/config admin@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span>:~/.ssh/config
+    ssh root@<span class="o">{</span>HOSTS<span class="o">}</span> <span class="s2">"systemctl disable firewalld.service --now"</span>
+ <span class="k">done</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<hr />
+<blockquote>
+  <p>参考文档：
+Ceph  Document: <a href="https://docs.ceph.com/en/latest/cephadm/install/#distribution-specific-installations">distribution-specific-installations</a>
+cephadm-ansible Document: <a href="https://github.com/ceph/cephadm-ansible/blob/devel/README.md">https://github.com/ceph/cephadm-ansible</a></p>
+</blockquote>]]></content><author><name>邢万里</name></author><category term="ceph" /><summary type="html"><![CDATA[[图片来源 ceph.io]]]></summary></entry><entry><title type="html">如何卸载 Ansible Tower</title><link href="http://localhost:4000/2022/11/29/how-to-uninstall-ansible-tower.html" rel="alternate" type="text/html" title="如何卸载 Ansible Tower" /><published>2022-11-29T00:00:00+08:00</published><updated>2022-11-29T00:00:00+08:00</updated><id>http://localhost:4000/2022/11/29/how-to-uninstall-ansible-tower</id><content type="html" xml:base="http://localhost:4000/2022/11/29/how-to-uninstall-ansible-tower.html"><![CDATA[<p><img src="https://nwzimg.wezhan.cn/contents/sitefiles2033/10168677/images/38319670.jpg" alt="Ansible" /></p>
 
 <p></p>
 

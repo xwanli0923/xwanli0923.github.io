@@ -53,6 +53,7 @@ $ dnf install -y cephadm vim bash-completion git ansible
 ```
 
 ## 设置系统
+
 1. 在 `clientc`创建`admin`账户，并设置其为免认证`SUDO`
 
 ```shell
@@ -82,6 +83,7 @@ $ ssh-copy-id root@localhost
 ```
 
 4. 将上述创建的用户，文件等在其他节点同样创建
+
 ```shell
 #!/bin/bash
 for HOSTS in ceph-{clienta,clientb,serverc,serverd,servere}
@@ -100,6 +102,7 @@ for HOSTS in ceph-{clienta,clientb,serverc,serverd,servere}
 ## 准备 cephadm-ansible
 
 1. 使用 `git clone` 命令下载 `cephadm-ansible`
+
 ```shell
 git clone -b quincy https://github.com/ceph/cephadm-ansible.git
 cd cephadm-ansible/

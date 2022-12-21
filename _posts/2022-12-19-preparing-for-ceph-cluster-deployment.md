@@ -60,7 +60,6 @@ $ passwd admin
 $ echo "admin ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/admin
 $ chmod 0400 /etc/sudoers.d/admin
 ```
-
 2. 在 **clientc** 上创建免密码认证的 **ssh** 密钥对，并复制到 **admin** 家目录
 
 ```shell
@@ -69,9 +68,8 @@ $ cp -r ~/.ssh  ~admin/.ssh
 $ chown -R admin: ~admin/.ssh
 $ ssh-copy-id root@localhost
 ```
-
 3. 根据自己的情况，编写本地主机名解析文件 **/etc/hosts**,追加以下内容
-```
+```shell
 172.16.80.102 ceph-clienta.lab.example.net ceph-clienta
 172.16.80.103 ceph-clientb.lab.example.net ceph-clientb
 172.16.80.104 ceph-serverc.lab.example.net ceph-serverc

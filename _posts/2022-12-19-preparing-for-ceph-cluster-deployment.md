@@ -97,7 +97,7 @@ cd cephadm-ansible/
 ```
 
 2. 在 **cephadm-adnible** 下创建 **hosts** 清单文件
-```ini
+```shell
 ceph-clienta.lab.example.net
 ceph-clientb.lab.example.net
 ceph-serverc.lab.example.net

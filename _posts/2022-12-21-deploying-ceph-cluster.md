@@ -58,12 +58,11 @@ $ curl -ddds -L https://quay.io/api/v1/repository/ceph/ceph/tag?page_size=100 | 
 
 ## 准备进行部署
 
-1. 创建一个`JSON`文件保护敏感信息,例如为 `auth.json`
+1. 创建一个 **JSON** 文件保护敏感信息,例如为 **auth.json**
 ```shell
 $ mdkir /root/ceph-cluster
 $ cd /root/ceph-cluster
-```
-```json
+$ cat auth.json
 {
    "url":"quay.io",
    "username":"YOUR QUAY ACCOUNT",
@@ -82,7 +81,6 @@ $ cephadm bootstrap --cluster-network 172.16.90.0/24 \
 --registry-json auth.json
 
 
-....ommit....
 Ceph Dashboard is now available at:
 
              URL: https://ceph-serverc.lab.example.net:8443/

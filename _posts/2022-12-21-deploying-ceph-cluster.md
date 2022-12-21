@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "部署CEPH集群"
+title: "开始部署 CEPH 集群"
 date: 2022-12-21
 tag: ceph
 ---
 
 ![Ceph](/assets/images/2022-12-21/photo-jelly-fish-01.jpg)
 
-# 部署Ceph集群
+# 开始部署Ceph集群
 
 ## 文档说明
 

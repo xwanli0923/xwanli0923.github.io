@@ -7,7 +7,6 @@ tag: ceph
 
 ![Ceph](/assets/images/2022-12-19/photo-squid-02.jpg)
 
-# 部署 Ceph 集群前的准备工作
 
 ## 文档说明
 

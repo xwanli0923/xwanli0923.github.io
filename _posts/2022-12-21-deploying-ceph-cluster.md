@@ -47,9 +47,7 @@ ceph version 17.2.5 (98318ae89f1a893a6ded3a640405cdbb33e08757) quincy (stable)
 ```shell
 $ dnf install jq 
 ```
-  
 - 查找镜像仓库中可用的镜像版本
-   
 ```shell
 $ curl -ddds -L https://quay.io/api/v1/repository/ceph/ceph/tag?page_size=100 | jq '."tags"[] .name' | grep '17.*'
 "v17.2"

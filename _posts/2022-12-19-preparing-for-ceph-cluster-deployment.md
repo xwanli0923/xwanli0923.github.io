@@ -60,14 +60,15 @@ $ passwd admin
 $ echo "admin ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/admin
 $ chmod 0400 /etc/sudoers.d/admin
 ```
-2. 在 **clientc** 上创建免密码认证的 **ssh** 密钥对，并复制到 **admin** 家目录
 
+2. 在 **clientc** 上创建免密码认证的 **ssh** 密钥对，并复制到 **admin** 家目录
 ```shell
 $ ssh-keygen -q -t rsa -f ~/.ssh/id_rsa -N ''
 $ cp -r ~/.ssh  ~admin/.ssh
 $ chown -R admin: ~admin/.ssh
 $ ssh-copy-id root@localhost
 ```
+
 3. 根据自己的情况，编写本地主机名解析文件 **/etc/hosts**,追加以下内容
 ```shell
 172.16.80.102 ceph-clienta.lab.example.net ceph-clienta
@@ -118,7 +119,6 @@ ceph-clienta.lab.example.net
 ```
 
 8. 测试清单中的主机，并执行 **cephadm-preflight.yml**
-   
 - 测试主机的连通性和用户
 ```shell
 $ ansible -i hosts --list-hosts all

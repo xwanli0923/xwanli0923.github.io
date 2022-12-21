@@ -6,6 +6,7 @@ tag: ceph
 ---
 
 ![Ceph](/assets/images/2022-12-21/photo-jelly-fish-01.jpg)
+*\[图片来源 ceph.io\]*
 
 
 ## 文档说明

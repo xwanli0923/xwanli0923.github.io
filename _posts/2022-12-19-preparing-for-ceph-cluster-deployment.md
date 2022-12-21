@@ -43,7 +43,7 @@ tag: ceph
   **public_network**: 172.16.80.0/24
   **cluster_network**: 172.16.90.0/24    
 
- ## 安装 CEPHADM 
+## 安装 CEPHADM 
 
 1. 使用`root`账户登录到`ceph-serverc`节点
 

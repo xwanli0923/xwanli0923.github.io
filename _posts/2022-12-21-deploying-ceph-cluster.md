@@ -36,7 +36,7 @@ tag: ceph
     - Memory: 4GiB
     - Storage: 10GiBx5
 
- ## 查找合适的镜像
+## 查找合适的镜像
 
 1. 以`admin`身份登录`ceph-serverc`, 使用 `cephadm`验证当前的版本
 
@@ -66,19 +66,23 @@ ceph version 17.2.5 (98318ae89f1a893a6ded3a640405cdbb33e08757) quincy (stable)
    ....ommit....
    ```
 
-3. 创建一个`JSON`文件保护敏感信息,例如为 `auth.json`
+## 准备进行部署
 
+1. 创建一个`JSON`文件保护敏感信息,例如为 `auth.json`
+
+```shell
 $ mdkir /root/ceph-cluster
 $ cd /root/ceph-cluster
-```json
-{
-        "url":"quay.io",
-        "username":"YOUR QUAY ACCOUNT",
-        "password":"YOUR QUAY ACCOUNT PASSWORD"
-}
 ```
+  ```json
+  {
+     "url":"quay.io",
+     "username":"YOUR QUAY ACCOUNT",
+     "password":"YOUR QUAY ACCOUNT PASSWORD"
+  }
+  ```
 
-4. 运行 `cephadm bootstrap` 命令创建一个ceph集群
+2. 运行 `cephadm bootstrap` 命令创建一个ceph集群
 
 ```shell
 # man cephadm  | grep -A 29 'cephadm bootstrap'
@@ -119,7 +123,9 @@ For more information see:
 Bootstrap complete.
 ```
 
-6. 验证集群状态
+## 验证结果
+
+1. 验证集群状态
 ```shell
 $ cephadm shell -- ceph -s
 Inferring fsid 5851a2e4-80f0-11ed-9d85-000c291c7df8
@@ -143,15 +149,19 @@ quay.io/ceph/ceph@sha256:0560b16bec6e84345f29fb6693cd2430884e6efff16a95d5bdd0bb0
     pgs:
 ```    
 
-7. 访问其`dashboard`
-  7.1. 在浏览器输入 `https://ceph-serverc.lab.example.net:8443`或`https://172.16.80.104:8443`，弹出的证书警告同意即可
+2. 访问其`dashboard`
+  - 在浏览器输入 `https://ceph-serverc.lab.example.net:8443`或`https://172.16.80.104:8443`，弹出的证书警告同意即可
   ![ceph dashboard](/assets/images/2022-12-21/ceph-dashboard.png)
 
-  7.2. 输入账户`admin`和设置的密码，将会看到概览界面
+  - 输入账户`admin`和设置的密码，将会看到概览界面
   ![ceph dashboard expand cluster](/assets/images/2022-12-21/ceph-dashboard-initial.png)
   ![ceph dashboard expand cluster](/assets/images/2022-12-21/ceph-dashboard-overview.png)
 
-8. 安装集群公共SSH公钥
+
+## 增加主机和设备
+
+1. 安装集群公共SSH公钥
+
 ```shell
 $ ceph cephadm get-pub-key > /root/ceph-cluster/ceph-cluster.pub
 $  for HOSTS in ceph-{clienta,clientb,serverc,serverd,servere}; \
@@ -159,7 +169,7 @@ $  for HOSTS in ceph-{clienta,clientb,serverc,serverd,servere}; \
        done
 ```
 
-9. 添加新的主机到集群
+2. 添加新的主机到集群
 
 ```shell
 $ ceph orch host add ceph-clienta.lab.example.net
@@ -175,7 +185,7 @@ $ ceph orch host add ceph-servere.lab.example.net
 Added host 'ceph-servere.lab.example.net' with addr '172.16.80.106'
 ```
 
-10. 增加新的`OSD`
+3. 增加新的`OSD`
 
 ```shell
 $ ceph orch daemon add osd ceph-serverc.lab.example.net:/dev/sdb
@@ -206,7 +216,7 @@ $ ceph orch daemon add osd ceph-servere.lab.example.net:/dev/sdd
 Created osd(s) 8 on host 'ceph-servere.lab.example.net'
 ```
 
-11. 最终的`ceph`集群状态
+4. 最终的`ceph`集群状态
 
 ```shell
 cephadm shell

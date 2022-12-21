@@ -45,8 +45,7 @@ tag: ceph
 
 ## 安装 CEPHADM 
 
-1. 使用`root`账户登录到`ceph-serverc`节点
-
+1. 使用 **root** 账户登录到 **ceph-serverc** 节点
 ```shell
 $ dnf install -y centos-release-ceph-quincy
 $ dnf install -y cephadm vim bash-completion git ansible
@@ -54,8 +53,7 @@ $ dnf install -y cephadm vim bash-completion git ansible
 
 ## 设置系统
 
-1. 在 `clientc`创建`admin`账户，并设置其为免认证`SUDO`
-
+1. 在 **clientc** 创建 **admin** 账户，并设置其为免认证 **SUDO**
 ```shell
 $ useradd admin
 $ passwd admin
@@ -63,7 +61,7 @@ $ echo "admin ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/admin
 $ chmod 0400 /etc/sudoers.d/admin
 ```
 
-2. 在 `clientc`上创建免密码认证的 ssh 密钥对，并复制到`admin`家目录
+2. 在 **clientc** 上创建免密码认证的 **ssh** 密钥对，并复制到 **admin** 家目录
 
 ```shell
 $ ssh-keygen -q -t rsa -f ~/.ssh/id_rsa -N ''
@@ -72,8 +70,7 @@ $ chown -R admin: ~admin/.ssh
 $ ssh-copy-id root@localhost
 ```
 
-3. 根据自己的情况，编写本地主机名解析文件 `/etc/hosts`,追加以下内容
-
+3. 根据自己的情况，编写本地主机名解析文件 **/etc/hosts**,追加以下内容
 ```
 172.16.80.102 ceph-clienta.lab.example.net ceph-clienta
 172.16.80.103 ceph-clientb.lab.example.net ceph-clientb
@@ -83,7 +80,6 @@ $ ssh-copy-id root@localhost
 ```
 
 4. 将上述创建的用户，文件等在其他节点同样创建
-
 ```shell
 #!/bin/bash
 for HOSTS in ceph-{clienta,clientb,serverc,serverd,servere}
@@ -101,14 +97,13 @@ for HOSTS in ceph-{clienta,clientb,serverc,serverd,servere}
 
 ## 准备 cephadm-ansible
 
-1. 使用 `git clone` 命令下载 `cephadm-ansible`
-
+1. 使用 **git clone** 命令下载 **cephadm-ansible**
 ```shell
 git clone -b quincy https://github.com/ceph/cephadm-ansible.git
 cd cephadm-ansible/
 ```
 
-2. 在 `cephadm-adnible` 下创建 `hosts`清单文件
+2. 在 **cephadm-adnible** 下创建 **hosts** 清单文件
 ```ini
 ceph-clienta.lab.example.net
 ceph-clientb.lab.example.net
@@ -123,47 +118,48 @@ ceph-clientb.lab.example.net
 [admin]
 ceph-clienta.lab.example.net
 ```
-8. 测试清单中的主机，并执行 `cephadm-preflight.yml`:
-   
-   - 测试主机的连通性和用户
-   ```shell
-   $ ansible -i hosts --list-hosts all
-     hosts (4):
-        ceph-serverc.lab.example.net
-        ceph-serverd.lab.example.net
-        ceph-servere.lab.example.net
-        ceph-clienta.lab.example.net
-        ceph-clientb.lab.example.net
-   
-   $ ansible -i hosts -m ping all
-   $  ansible all -i hosts  -u admin -b -m ping
-   ```
-  
-  - 查看 `cephadm-preflight.yml`
-  
-    ```yaml
-    # Usage:
-    #
-    # ansible-playbook -i <inventory host file> cephadm-preflight.yml
-    #
-    # You can limit the execution to a set of hosts by using `--limit` option:
-    #
-    # ansible-playbook -i <inventory host file> cephadm-preflight.yml --limit <my_osd_group|my_node_name>
-    #
-    # You can override variables using `--extra-vars` parameter:
-    #
-    # ansible-playbook -i <inventory host file> cephadm-preflight.yml --extra-vars "ceph_origin=rhcs"
-    #
-    ```
 
-  - 使用 `--extra-vars "ceph_origin=community" 执行 `cephadm-preflight.yml`
-    ```shell
-    $  ansible-playbook -i hosts --extra-vars "ceph_origin=community" cephadm-preflight.yml
-    ```
+8. 测试清单中的主机，并执行 **cephadm-preflight.yml**
+   
+- 测试主机的连通性和用户
+```shell
+$ ansible -i hosts --list-hosts all
+  hosts (4):
+     ceph-serverc.lab.example.net
+     ceph-serverd.lab.example.net
+     ceph-servere.lab.example.net
+     ceph-clienta.lab.example.net
+     ceph-clientb.lab.example.net
+  
+$ ansible -i hosts -m ping all
+$  ansible all -i hosts  -u admin -b -m ping
+```
+  
+- 查看 **cephadm-preflight.yml**
+
+```yaml
+# Usage:
+#
+# ansible-playbook -i <inventory host file> cephadm-preflight.yml
+#
+# You can limit the execution to a set of hosts by using `--limit` option:
+#
+# ansible-playbook -i <inventory host file> cephadm-preflight.yml --limit <my_osd_group|my_node_name>
+#
+# You can override variables using `--extra-vars` parameter:
+#
+# ansible-playbook -i <inventory host file> cephadm-preflight.yml --extra-vars "ceph_origin=rhcs"
+#
+```
+
+- 使用 **--extra-vars "ceph_origin=community** 执行 **cephadm-preflight.yml**
+```shell
+$  ansible-playbook -i hosts --extra-vars "ceph_origin=community" cephadm-preflight.yml
+```
 
 ## 设置默认登录账户(可选)
 
-1. 在 `root`和`admin` 的 `$HOME/.ssh/config`中增加以下内容(没有则创建该文件)：
+1. 在 **root** 和 **admin** 的 **$HOME/.ssh/config** 中增加以下内容(没有则创建该文件)：
 ```ini
 Host *.lab.example.net
      User root
@@ -181,6 +177,7 @@ for HOSTS in ceph-{clienta,clientb,serverc,serverd,servere}
        ssh root@{HOSTS} "systemctl disable firewalld.service --now"
     done
 ```   
+
 ---
 > 参考文档：
 > Ceph  Document: [distribution-specific-installations](https://docs.ceph.com/en/latest/cephadm/install/#distribution-specific-installations)

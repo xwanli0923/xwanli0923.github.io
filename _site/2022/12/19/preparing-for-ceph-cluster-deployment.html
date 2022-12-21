@@ -7,22 +7,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google-translate-customization" content="108d9124921d80c3-80e20d618ff053c8-g4f02ec6f3dba68b7-c">
 <!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>如何卸载 Ansible Tower | 万里博客</title>
+<title>部署CEPH集群前的准备工作 | 万里博客</title>
 <meta name="generator" content="Jekyll v4.3.1">
-<meta property="og:title" content="如何卸载 Ansible Tower">
+<meta property="og:title" content="部署CEPH集群前的准备工作">
 <meta name="author" content="邢万里">
 <meta property="og:locale" content="en_US">
-<meta name="description" content="功不唐捐">
-<meta property="og:description" content="功不唐捐">
-<link rel="canonical" href="http://localhost:4000/2022/11/29/how-to-uninstall-ansible-tower.html">
-<meta property="og:url" content="http://localhost:4000/2022/11/29/how-to-uninstall-ansible-tower.html">
+<meta name="description" content="[图片来源 ceph.io]">
+<meta property="og:description" content="[图片来源 ceph.io]">
+<link rel="canonical" href="http://localhost:4000/2022/12/19/preparing-for-ceph-cluster-deployment.html">
+<meta property="og:url" content="http://localhost:4000/2022/12/19/preparing-for-ceph-cluster-deployment.html">
 <meta property="og:site_name" content="万里博客">
 <meta property="og:type" content="article">
-<meta property="article:published_time" content="2022-11-29T00:00:00+08:00">
+<meta property="article:published_time" content="2022-12-19T00:00:00+08:00">
 <meta name="twitter:card" content="summary">
-<meta property="twitter:title" content="如何卸载 Ansible Tower">
+<meta property="twitter:title" content="部署CEPH集群前的准备工作">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"邢万里"},"dateModified":"2022-11-29T00:00:00+08:00","datePublished":"2022-11-29T00:00:00+08:00","description":"功不唐捐","headline":"如何卸载 Ansible Tower","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2022/11/29/how-to-uninstall-ansible-tower.html"},"url":"http://localhost:4000/2022/11/29/how-to-uninstall-ansible-tower.html"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"邢万里"},"dateModified":"2022-12-19T00:00:00+08:00","datePublished":"2022-12-19T00:00:00+08:00","description":"[图片来源 ceph.io]","headline":"部署CEPH集群前的准备工作","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2022/12/19/preparing-for-ceph-cluster-deployment.html"},"url":"http://localhost:4000/2022/12/19/preparing-for-ceph-cluster-deployment.html"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="shortcut icon" href="favicon.ico">
   <!---
@@ -618,11 +618,11 @@ document.addEventListener('DOMContentLoaded', function(event) {
 
 
 <header class="post-header">
-  <h1 class="post-title p-name" itemprop="name headline">如何卸载 Ansible Tower</h1>
+  <h1 class="post-title p-name" itemprop="name headline">部署CEPH集群前的准备工作</h1>
   <h2 class="post-subtitle"></h2>
 
   <p class="post-meta">
-    <time class="dt-published" datetime="2022-11-29T00:00:00+08:00" itemprop="datePublished"><i class="fa fa-calendar"></i> 2022-11-29 Tue
+    <time class="dt-published" datetime="2022-12-19T00:00:00+08:00" itemprop="datePublished"><i class="fa fa-calendar"></i> 2022-12-19 Mon
     </time>
 
     
@@ -659,91 +659,233 @@ document.addEventListener('DOMContentLoaded', function(event) {
 
 
 
-    <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 1 min</span>
+    <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 3 mins</span>
   </p>
-<div class="post-tags"><a class="post-tag" href="/tags.html#ansible">#ansible</a></div></header>
+<div class="post-tags"><a class="post-tag" href="/tags.html#ceph">#ceph</a></div></header>
 <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
     <div class="post-content e-content" itemprop="articleBody">
 
-      <p><img src="https://nwzimg.wezhan.cn/contents/sitefiles2033/10168677/images/38319670.jpg" alt="Ansible"></p>
+      <p><img src="/assets/images/2022-12-19/photo-squid-02.jpg" alt="Ceph">
+<em>[图片来源 ceph.io]</em></p>
 
-<p></p>
+<h2 id="文档说明">文档说明</h2>
 
 <ul>
-  <li>使用 <code class="language-plaintext highlighter-rouge">ansible-tower-service stop</code> 命令停止 Ansible 相关服务，并使用 <code class="language-plaintext highlighter-rouge">ansible-tower-service status</code>  命令确保服务已经停止成功。
-    <div class="language-bash highlighter-rouge">
-<div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ansible-tower-service stop
-Stopping Tower
-Redirecting to /bin/systemctl stop rh-postgresql10-postgresql.service
-Redirecting to /bin/systemctl stop rabbitmq-server.service
-Redirecting to /bin/systemctl stop nginx.service
-Redirecting to /bin/systemctl stop supervisord.service
-</code></pre></div>    </div>
-  </li>
-  <li>将 <code class="language-plaintext highlighter-rouge">/etc/ansible</code> 和 <code class="language-plaintext highlighter-rouge">/etc/tower</code> 目录进行归档。
-    <div class="language-bash highlighter-rouge">
-<div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">tar</span> <span class="nt">-cf</span> ansible.tar /etc/ansible
-<span class="nv">$ </span><span class="nb">tar</span> <span class="nt">-cf</span> tower.tar   /etc/tower
-</code></pre></div>    </div>
-  </li>
-  <li>另外，假设您已经使用 <code class="language-plaintext highlighter-rouge">setup.sh</code> 安装了 Ansible Tower,你可以使用以下命令进行备份 Ansible Tower。这样你可以在重新安装 Ansible Tower 后使用 <code class="language-plaintext highlighter-rouge">setup.sh -r &lt;backup file&gt;</code> 命令进行还原。
-    <div class="language-bash highlighter-rouge">
-<div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>setup.sh <span class="nt">-b</span>
-</code></pre></div>    </div>
-  </li>
-  <li>使用 <code class="language-plaintext highlighter-rouge">yum remove</code> 命令卸载 <code class="language-plaintext highlighter-rouge">Ansible</code>，<code class="language-plaintext highlighter-rouge">RabbitMQ</code> 和 <code class="language-plaintext highlighter-rouge">Python</code>。
-    <div class="language-bash highlighter-rouge">
-<div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>yum remove ansible-tower<span class="k">*</span>
-<span class="nv">$ </span>yum remove rabbitmq-server
-<span class="nv">$ </span>yum remove rh-python36-<span class="k">*</span>
-</code></pre></div>    </div>
-  </li>
-  <li>删除 <code class="language-plaintext highlighter-rouge">Postgres</code> 脚本。
-    <div class="language-bash highlighter-rouge">
-<div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">rm</span> /etc/profile.d/rh-postgresql10-env.sh
-</code></pre></div>    </div>
-  </li>
-  <li>删除以下目录。
-    <div class="language-bash highlighter-rouge">
-<div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">rm</span> <span class="nt">-rf</span> /etc/ansible
-<span class="nv">$ </span><span class="nb">rm</span> <span class="nt">-rf</span> /etc/tower
-<span class="nv">$ </span><span class="nb">rm</span> <span class="nt">-rf</span> /var/lib/pgsql
-<span class="nv">$ </span><span class="nb">rm</span> <span class="nt">-rf</span> /var/lib/awx
-<span class="nv">$ </span><span class="nb">rm</span> <span class="nt">-rf</span> /var/lib/rabbitmq
-<span class="nv">$ </span><span class="nb">rm</span> <span class="nt">-rf</span> /var/opt/rh/rh-postgresql10/lib/pgsql/data
-</code></pre></div>    </div>
-  </li>
-  <li>使用 <code class="language-plaintext highlighter-rouge">yum clean</code> 命令清除 <code class="language-plaintext highlighter-rouge">Ansible Tower</code> 软件仓库
-    <div class="language-bash highlighter-rouge">
-<div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>yum clean metadata <span class="nt">--enablerepo</span><span class="o">=</span><span class="s2">"ansible-tower,ansible-tower-dependencies"</span>
-</code></pre></div>    </div>
-  </li>
-  <li>确保 <code class="language-plaintext highlighter-rouge">rpm</code> 命令没有输出
-    <div class="language-bash highlighter-rouge">
-<div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rpm <span class="nt">-qa</span> | <span class="nb">grep </span>ansible-tower
-</code></pre></div>    </div>
-    <hr>
-    <blockquote>
-      <p>来源：<a href="http://www.freekb.net/Article?id=212">http://www.freekb.net/Article?id=212</a> <br>
-翻译： 邢万里</p>
-    </blockquote>
+  <li>系统版本：CentOS-Stream-8-x86_64-20221125</li>
+  <li>内核版本：4.18.0-408</li>
+  <li>podman 版本:4.2.0</li>
+  <li>ceph 版本： Quincy</li>
+  <li>其他要求： <strong>git</strong>、<strong>LVM2</strong>、<strong>python3.6.8</strong>
+</li>
+  <li>客户端配置：
+    <ul>
+      <li>
+<strong>ceph-clienta</strong>
+        <ul>
+          <li>CPU: 2vCPU</li>
+          <li>Memory: 4GiB</li>
+          <li>Storage: 10GiBx5</li>
+        </ul>
+      </li>
+      <li>
+<strong>ceph-clientb</strong>
+        <ul>
+          <li>CPU: 2vCPU</li>
+          <li>Memory: 4GiB</li>
+        </ul>
+      </li>
+    </ul>
   </li>
 </ul>
+
+<p><em>ceph-clienta 充当ceph集群客户端的同时，也充当ceph的管理端</em></p>
+
+<ul>
+  <li>集群节点配置：
+    <ul>
+      <li>
+<strong>ceph-serverc</strong>、<strong>ceph-serverd</strong>和<strong>ceph-servere</strong>
+        <ul>
+          <li>CPU: 2vCPU</li>
+          <li>Memory: 4GiB</li>
+          <li>Storage: 10GiBx5</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>网络信息：
+<strong>public_network</strong>: 172.16.80.0/24
+<strong>cluster_network</strong>: 172.16.90.0/24</li>
+</ul>
+
+<h2 id="安装-cephadm">安装 CEPHADM</h2>
+
+<ol>
+  <li>使用 <strong>root</strong> 账户登录到 <strong>ceph-serverc</strong> 节点
+    <div class="language-shell highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>dnf <span class="nb">install</span> <span class="nt">-y</span> centos-release-ceph-quincy
+<span class="nv">$ </span>dnf <span class="nb">install</span> <span class="nt">-y</span> cephadm vim bash-completion git ansible
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="设置系统">设置系统</h2>
+
+<ol>
+  <li>在 <strong>clientc</strong> 创建 <strong>admin</strong> 账户，并设置其为免认证 <strong>SUDO</strong>
+    <div class="language-shell highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>useradd admin
+<span class="nv">$ </span>passwd admin
+<span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"admin ALL=(ALL) NOPASSWD:ALL"</span> <span class="o">&gt;</span> /etc/sudoers.d/admin
+<span class="nv">$ </span><span class="nb">chmod </span>0400 /etc/sudoers.d/admin
+</code></pre></div>    </div>
+  </li>
+  <li>在 <strong>clientc</strong> 上创建免密码认证的 <strong>ssh</strong> 密钥对，并复制到 <strong>admin</strong> 家目录
+    <div class="language-shell highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssh-keygen <span class="nt">-q</span> <span class="nt">-t</span> rsa <span class="nt">-f</span> ~/.ssh/id_rsa <span class="nt">-N</span> <span class="s1">''</span>
+<span class="nv">$ </span><span class="nb">cp</span> <span class="nt">-r</span> ~/.ssh  ~admin/.ssh
+<span class="nv">$ </span><span class="nb">chown</span> <span class="nt">-R</span> admin: ~admin/.ssh
+<span class="nv">$ </span>ssh-copy-id root@localhost
+</code></pre></div>    </div>
+  </li>
+  <li>根据自己的情况，编写本地主机名解析文件 <strong>/etc/hosts</strong>,追加以下内容
+    <div class="language-shell highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code>172.16.80.102 ceph-clienta.lab.example.net ceph-clienta
+172.16.80.103 ceph-clientb.lab.example.net ceph-clientb
+172.16.80.104 ceph-serverc.lab.example.net ceph-serverc
+172.16.80.105 ceph-serverd.lab.example.net ceph-serverd
+172.16.80.106 ceph-servere.lab.example.net ceph-servere
+</code></pre></div>    </div>
+  </li>
+  <li>将上述创建的用户，文件等在其他节点同样创建
+    <div class="language-shell highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="k">for </span>HOSTS <span class="k">in </span>ceph-<span class="o">{</span>clienta,clientb,serverc,serverd,servere<span class="o">}</span>
+  <span class="k">do
+ </span>scp <span class="nt">-r</span> /root/.ssh root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span>:/root/.ssh
+ scp  /etc/hosts root@<span class="o">{</span>HOSTS<span class="o">}</span>:/etc/hosts
+ ssh root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span> <span class="s2">"useradd admin"</span>
+ ssh root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span> <span class="s2">"echo YOUR_ADMIN_PASSWORD | passwd --stdin admin"</span>
+ scp /etc/sudoers.d/admin root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span>:/etc/sudoers.d/admin
+ ssh root@<span class="o">{</span>HOSTS<span class="o">}</span> <span class="s2">"chmod 0400 /etc/sudoers.d/admin"</span>
+ scp <span class="nt">-r</span> /root/.ssh root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span>:/home/admin/.ssh
+ ssh root@<span class="o">{</span>HOSTS<span class="o">}</span> <span class="s2">"chown -R admin: /home/admin/.ssh"</span>
+  <span class="k">done</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="准备-cephadm-ansible">准备 cephadm-ansible</h2>
+
+<ol>
+  <li>使用 <strong>git clone</strong> 命令下载 <strong>cephadm-ansible</strong>:
+    <div class="language-shell highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>git clone <span class="nt">-b</span> quincy https://github.com/ceph/cephadm-ansible.git
+<span class="nv">$ </span><span class="nb">cd </span>cephadm-ansible/
+</code></pre></div>    </div>
+  </li>
+  <li>在 <strong>cephadm-adnible</strong> 下创建 <strong>hosts</strong> 清单文件:
+    <div class="language-ini highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code><span class="err">ceph-clienta.lab.example.net</span>
+<span class="err">ceph-clientb.lab.example.net</span>
+<span class="err">ceph-serverc.lab.example.net</span>
+<span class="err">ceph-serverd.lab.example.net</span>
+<span class="err">ceph-servere.lab.example.net</span>
+   
+<span class="nn">[clients]</span>
+<span class="err">ceph-clienta.lab.example.net</span>
+<span class="err">ceph-clientb.lab.example.net</span>
+   
+<span class="nn">[admin]</span>
+<span class="err">ceph-clienta.lab.example.net</span>
+</code></pre></div>    </div>
+  </li>
+  <li>测试清单中的主机，并执行 <strong>cephadm-preflight.yml</strong>
+    <ul>
+      <li>测试主机的连通性和用户
+        <div class="language-shell highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ansible <span class="nt">-i</span> hosts <span class="nt">--list-hosts</span> all
+  hosts <span class="o">(</span>4<span class="o">)</span>:
+     ceph-serverc.lab.example.net
+     ceph-serverd.lab.example.net
+     ceph-servere.lab.example.net
+     ceph-clienta.lab.example.net
+     ceph-clientb.lab.example.net
+       
+<span class="nv">$ </span>ansible <span class="nt">-i</span> hosts <span class="nt">-m</span> ping all
+<span class="nv">$ </span>ansible all <span class="nt">-i</span> hosts  <span class="nt">-u</span> admin <span class="nt">-b</span> <span class="nt">-m</span> ping
+</code></pre></div>        </div>
+      </li>
+      <li>查看 <strong>cephadm-preflight.yml</strong>
+        <div class="language-yaml highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code><span class="c1"># Usage:</span>
+<span class="c1">#</span>
+<span class="c1"># ansible-playbook -i &lt;inventory host file&gt; cephadm-preflight.yml</span>
+<span class="c1">#</span>
+<span class="c1"># You can limit the execution to a set of hosts by using `--limit` option:</span>
+<span class="c1">#</span>
+<span class="c1"># ansible-playbook -i &lt;inventory host file&gt; cephadm-preflight.yml --limit &lt;my_osd_group|my_node_name&gt;</span>
+<span class="c1">#</span>
+<span class="c1"># You can override variables using `--extra-vars` parameter:</span>
+<span class="c1">#</span>
+<span class="c1"># ansible-playbook -i &lt;inventory host file&gt; cephadm-preflight.yml --extra-vars "ceph_origin=rhcs"</span>
+<span class="c1">#</span>
+</code></pre></div>        </div>
+      </li>
+      <li>使用 <strong>–extra-vars “ceph_origin=community</strong> 执行 <strong>cephadm-preflight.yml</strong>
+        <div class="language-shell highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code><span class="nv">$ </span> ansible-playbook <span class="nt">-i</span> hosts <span class="nt">--extra-vars</span> <span class="s2">"ceph_origin=community"</span> cephadm-preflight.yml
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="设置默认登录账户可选">设置默认登录账户(可选)</h2>
+
+<ol>
+  <li>在 <strong>root</strong> 和 <strong>admin</strong> 的 <strong>$HOME/.ssh/config</strong> 中增加以下内容(没有则创建该文件)：
+    <div class="language-ini highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code><span class="err">Host</span> <span class="err">*.lab.example.net</span>
+  <span class="err">User</span> <span class="err">root</span>
+  <span class="err">StrictHostKeyChecking</span> <span class="err">no</span>
+  <span class="err">UserKnownHostsFile</span> <span class="err">/dev/null</span>
+</code></pre></div>    </div>
+  </li>
+  <li>将上述文件分别复制到其他节点的对应用户家目录中：
+    <div class="language-shell highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="k">for </span>HOSTS <span class="k">in </span>ceph-<span class="o">{</span>clienta,clientb,serverc,serverd,servere<span class="o">}</span>
+ <span class="k">do
+    </span>scp /root/.ssh/config root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span>:~/.ssh/config
+    scp /home/admin/.ssh/config admin@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span>:~/.ssh/config
+    ssh root@<span class="o">{</span>HOSTS<span class="o">}</span> <span class="s2">"systemctl disable firewalld.service --now"</span>
+ <span class="k">done</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<hr>
+<blockquote>
+  <p>参考文档：
+Ceph  Document: <a href="https://docs.ceph.com/en/latest/cephadm/install/#distribution-specific-installations">distribution-specific-installations</a>
+cephadm-ansible Document: <a href="https://github.com/ceph/cephadm-ansible/blob/devel/README.md">https://github.com/ceph/cephadm-ansible</a></p>
+</blockquote>
 
 
     </div>
 
 </article>
 <div class="post-nav">
-<span></span><a class="next" href="/2022/12/19/preparing-for-ceph-cluster-deployment.html" title="部署CEPH集群前的准备工作">部署CEPH集群前的准备工作</a>
+<a class="previous" href="/2022/11/29/how-to-uninstall-ansible-tower.html" title="如何卸载 Ansible Tower">如何卸载 Ansible Tower</a><a class="next" href="/2022/12/21/deploying-ceph-cluster.html" title="开始部署 CEPH 集群">开始部署 CEPH 集群</a>
 </div>
 <div class="post-related">
       <div>Related Articles</div>
       <ul>
-        <li><a class="post-link" href="/2022/11/29/how-to-uninstall-ansible-tower.html" title="部署CEPH集群前的准备工作">如何卸载 Ansible Tower</a></li>
-<li><a class="post-link" href="/2022/12/19/preparing-for-ceph-cluster-deployment.html" title="部署CEPH集群前的准备工作">部署CEPH集群前的准备工作</a></li>
-<li><a class="post-link" href="/2022/12/21/deploying-ceph-cluster.html" title="部署CEPH集群前的准备工作">开始部署 CEPH 集群</a></li>
+        <li><a class="post-link" href="/2022/12/19/preparing-for-ceph-cluster-deployment.html" title="开始部署 CEPH 集群">部署CEPH集群前的准备工作</a></li>
+<li><a class="post-link" href="/2022/11/29/how-to-uninstall-ansible-tower.html" title="开始部署 CEPH 集群">如何卸载 Ansible Tower</a></li>
+<li><a class="post-link" href="/2022/12/21/deploying-ceph-cluster.html" title="开始部署 CEPH 集群">开始部署 CEPH 集群</a></li>
 </ul>
     </div>
 <div class="post-comments"></div></section>

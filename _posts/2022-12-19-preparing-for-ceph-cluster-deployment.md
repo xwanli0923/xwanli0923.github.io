@@ -90,61 +90,63 @@ for HOSTS in ceph-{clienta,clientb,serverc,serverd,servere}
 
 ## 准备 cephadm-ansible
 
-1. 使用 **git clone** 命令下载 **cephadm-ansible**
+1. 使用 **git clone** 命令下载 **cephadm-ansible**:
 ```shell
-git clone -b quincy https://github.com/ceph/cephadm-ansible.git
-cd cephadm-ansible/
+$ git clone -b quincy https://github.com/ceph/cephadm-ansible.git
+$ cd cephadm-ansible/
 ```
 
-2. 在 **cephadm-adnible** 下创建 **hosts** 清单文件
-```shell
-ceph-clienta.lab.example.net
-ceph-clientb.lab.example.net
-ceph-serverc.lab.example.net
-ceph-serverd.lab.example.net
-ceph-servere.lab.example.net
-
-[clients]
-ceph-clienta.lab.example.net
-ceph-clientb.lab.example.net
-
-[admin]
-ceph-clienta.lab.example.net
-```
+2. 在 **cephadm-adnible** 下创建 **hosts** 清单文件:
+   ```ini
+   ceph-clienta.lab.example.net
+   ceph-clientb.lab.example.net
+   ceph-serverc.lab.example.net
+   ceph-serverd.lab.example.net
+   ceph-servere.lab.example.net
+   
+   [clients]
+   ceph-clienta.lab.example.net
+   ceph-clientb.lab.example.net
+   
+   [admin]
+   ceph-clienta.lab.example.net
+   ```
 
 3. 测试清单中的主机，并执行 **cephadm-preflight.yml**
-- 测试主机的连通性和用户
-```shell
-$ ansible -i hosts --list-hosts all
-  hosts (4):
-     ceph-serverc.lab.example.net
-     ceph-serverd.lab.example.net
-     ceph-servere.lab.example.net
-     ceph-clienta.lab.example.net
-     ceph-clientb.lab.example.net
-  
-$ ansible -i hosts -m ping all
-$ ansible all -i hosts  -u admin -b -m ping
-```
-- 查看 **cephadm-preflight.yml**
-```yaml
-# Usage:
-#
-# ansible-playbook -i <inventory host file> cephadm-preflight.yml
-#
-# You can limit the execution to a set of hosts by using `--limit` option:
-#
-# ansible-playbook -i <inventory host file> cephadm-preflight.yml --limit <my_osd_group|my_node_name>
-#
-# You can override variables using `--extra-vars` parameter:
-#
-# ansible-playbook -i <inventory host file> cephadm-preflight.yml --extra-vars "ceph_origin=rhcs"
-#
-```
-- 使用 **--extra-vars "ceph_origin=community** 执行 **cephadm-preflight.yml**
-```shell
-$  ansible-playbook -i hosts --extra-vars "ceph_origin=community" cephadm-preflight.yml
-```
+   - 测试主机的连通性和用户
+     ```shell
+     $ ansible -i hosts --list-hosts all
+       hosts (4):
+          ceph-serverc.lab.example.net
+          ceph-serverd.lab.example.net
+          ceph-servere.lab.example.net
+          ceph-clienta.lab.example.net
+          ceph-clientb.lab.example.net
+       
+     $ ansible -i hosts -m ping all
+     $ ansible all -i hosts  -u admin -b -m ping
+     ```
+
+   - 查看 **cephadm-preflight.yml**
+     ```yaml
+     # Usage:
+     #
+     # ansible-playbook -i <inventory host file> cephadm-preflight.yml
+     #
+     # You can limit the execution to a set of hosts by using `--limit` option:
+     #
+     # ansible-playbook -i <inventory host file> cephadm-preflight.yml --limit <my_osd_group|my_node_name>
+     #
+     # You can override variables using `--extra-vars` parameter:
+     #
+     # ansible-playbook -i <inventory host file> cephadm-preflight.yml --extra-vars "ceph_origin=rhcs"
+     #
+     ```
+
+   - 使用 **--extra-vars "ceph_origin=community** 执行 **cephadm-preflight.yml**
+     ```shell
+     $  ansible-playbook -i hosts --extra-vars "ceph_origin=community" cephadm-preflight.yml
+     ```
 
 ## 设置默认登录账户(可选)
 

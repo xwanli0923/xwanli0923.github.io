@@ -7,6 +7,7 @@ tag: ceph
 
 ![Ceph](/assets/images/2022-12-19/photo-squid-02.jpg)
 *\[图片来源 ceph.io\]*
+
 *作者：邢万里*
 
 ## 文档说明

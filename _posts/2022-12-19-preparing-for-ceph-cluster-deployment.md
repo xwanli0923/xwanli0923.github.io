@@ -112,7 +112,7 @@ ceph-clientb.lab.example.net
 ceph-clienta.lab.example.net
 ```
 
-8. 测试清单中的主机，并执行 **cephadm-preflight.yml**
+3. 测试清单中的主机，并执行 **cephadm-preflight.yml**
 - 测试主机的连通性和用户
 ```shell
 $ ansible -i hosts --list-hosts all

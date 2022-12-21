@@ -11,15 +11,10 @@ tag: ceph
 ## 文档说明
 
 - 系统版本：CentOS-Stream-8-x86_64-20221125
-
 - 内核版本：4.18.0-408
-
 - podman 版本:4.2.0
-
 - ceph 版本： Quincy
-
 - 其他要求： **git**、**LVM2**、**python3.6.8**
-
 - 客户端配置：
   - **ceph-clienta**
     - CPU: 2vCPU
@@ -33,7 +28,6 @@ tag: ceph
 *ceph-clienta 充当ceph集群客户端的同时，也充当ceph的管理端*
 
 - 集群节点配置：
-
   - **ceph-serverc**、**ceph-serverd**和**ceph-servere**
     - CPU: 2vCPU
     - Memory: 4GiB

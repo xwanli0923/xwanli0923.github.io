@@ -47,7 +47,7 @@ $ dnf install -y cephadm vim bash-completion git ansible
 
 ## 设置系统
 
-1. 在 **clientc** 创建 **admin** 账户，并设置其为免认证 **SUDO**
+1. 在 **ceph-clientc** 创建 **admin** 账户，并设置其为免认证 **SUDO**
 ```shell
 $ useradd admin
 $ passwd admin
@@ -55,7 +55,7 @@ $ echo "admin ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/admin
 $ chmod 0400 /etc/sudoers.d/admin
 ```
 
-2. 在 **clientc** 上创建免密码认证的 **ssh** 密钥对，并复制到 **admin** 家目录
+2. 在 **ceph-clientc** 上创建免密码认证的 **ssh** 密钥对，并复制到 **admin** 家目录
 ```shell
 $ ssh-keygen -q -t rsa -f ~/.ssh/id_rsa -N ''
 $ cp -r ~/.ssh  ~admin/.ssh

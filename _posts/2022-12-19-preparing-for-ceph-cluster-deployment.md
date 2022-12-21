@@ -97,7 +97,6 @@ cd cephadm-ansible/
 ```
 
 2. 在 **cephadm-adnible** 下创建 **hosts** 清单文件
-
 ```shell
 ceph-clienta.lab.example.net
 ceph-clientb.lab.example.net
@@ -125,11 +124,9 @@ $ ansible -i hosts --list-hosts all
      ceph-clientb.lab.example.net
   
 $ ansible -i hosts -m ping all
-$  ansible all -i hosts  -u admin -b -m ping
+$ ansible all -i hosts  -u admin -b -m ping
 ```
-  
 - 查看 **cephadm-preflight.yml**
-
 ```yaml
 # Usage:
 #
@@ -144,7 +141,6 @@ $  ansible all -i hosts  -u admin -b -m ping
 # ansible-playbook -i <inventory host file> cephadm-preflight.yml --extra-vars "ceph_origin=rhcs"
 #
 ```
-
 - 使用 **--extra-vars "ceph_origin=community** 执行 **cephadm-preflight.yml**
 ```shell
 $  ansible-playbook -i hosts --extra-vars "ceph_origin=community" cephadm-preflight.yml

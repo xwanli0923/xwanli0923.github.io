@@ -145,7 +145,7 @@ $ cd cephadm-ansible/
      #
      ```
 
-   - 使用 **--extra-vars "ceph_origin=community** 执行 **cephadm-preflight.yml**
+   - 使用 **--extra-vars "ceph_origin=community"** 执行 **cephadm-preflight.yml**
      ```shell
      $  ansible-playbook -i hosts --extra-vars "ceph_origin=community" cephadm-preflight.yml
      ```

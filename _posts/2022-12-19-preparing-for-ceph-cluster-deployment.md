@@ -3,7 +3,6 @@ layout: post
 title: "部署CEPH集群前的准备工作"
 date: 2022-12-19
 tag: ceph
-categories: 存储
 ---
 
 ![Ceph](/assets/images/2022-12-19/photo-squid-02.jpg)

@@ -3,7 +3,6 @@ layout: post
 title: "如何卸载 Ansible Tower"
 date: 2022-11-29
 tag: ansible
-categories: 自动化
 ---
 
 ![Ansible](https://nwzimg.wezhan.cn/contents/sitefiles2033/10168677/images/38319670.jpg)

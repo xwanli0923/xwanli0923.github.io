@@ -3,7 +3,6 @@ layout: post
 title: "开始部署 CEPH 集群"
 date: 2022-12-21
 tag: ceph
-categories: 存储
 ---
 
 ![Ceph](/assets/images/2022-12-21/photo-jelly-fish-01.jpg)

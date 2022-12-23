@@ -48,7 +48,7 @@ yat:
 # header_transparent: true
 
 # Google analytics
-# google_analytics: [Tracking ID]
+google_analytics: [G-6P55JXXCXC]
 
 # If you want to generate website sitemap, you can set true
   sitemap: true
@@ -86,7 +86,7 @@ yat:
 # greatgold: #f2cb05
 # greenblue: #389092
 #
-# brand_color: orangered
+brand_color: greenblue
 #
 # Custom color as below:
 # brand_color: "#1a8e42"
@@ -106,11 +106,11 @@ yat:
 
 # Code badge setting
 # You can enable or disable the code badge and so on
-# code_badge:
-#   enabled: "true"
-#   color: "#fff"
-#   background_color: "#ff4e00"
-#   text_transform: "uppercase"  # ("uppercase", "lowercase", "capitalize")
+code_badge:
+  enabled: "true"
+  color: "#fff"
+  background_color: "#6d6d6d"
+  text_transform: "lowercase"  # ("uppercase", "lowercase", "capitalize")
 
 # If you want to link only specific pages in your header, uncomment
 # this and add the path to the pages in order as they should show up

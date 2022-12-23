@@ -80,13 +80,13 @@ $ ssh-copy-id root@localhost
 for HOSTS in ceph-{clienta,clientb,serverc,serverd,servere}
   do
       scp -r /root/.ssh root@${HOSTS}:/root/.ssh
-      scp  /etc/hosts root@{HOSTS}:/etc/hosts
+      scp  /etc/hosts root@${HOSTS}:/etc/hosts
       ssh root@${HOSTS} "useradd admin"
       ssh root@${HOSTS} "echo YOUR_ADMIN_PASSWORD | passwd --stdin admin"
       scp /etc/sudoers.d/admin root@${HOSTS}:/etc/sudoers.d/admin
-      ssh root@{HOSTS} "chmod 0400 /etc/sudoers.d/admin"
+      ssh root@${HOSTS} "chmod 0400 /etc/sudoers.d/admin"
       scp -r /root/.ssh root@${HOSTS}:/home/admin/.ssh
-      ssh root@{HOSTS} "chown -R admin: /home/admin/.ssh"
+      ssh root@${HOSTS} "chown -R admin: /home/admin/.ssh"
   done
 ```
 
@@ -167,7 +167,7 @@ for HOSTS in ceph-{clienta,clientb,serverc,serverd,servere}
     do
        scp /root/.ssh/config root@${HOSTS}:~/.ssh/config
        scp /home/admin/.ssh/config admin@${HOSTS}:~/.ssh/config
-       ssh root@{HOSTS} "systemctl disable firewalld.service --now"
+       ssh root@${HOSTS} "systemctl disable firewalld.service --now"
     done
 ```   
 

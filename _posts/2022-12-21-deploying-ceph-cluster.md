@@ -228,6 +228,6 @@ $  for HOSTS in ceph-{clienta,clientb,serverc,serverd,servere}; \
    ![dashboard new view](/assets/images/2022-12-21/ceph-dashboard-new-view.png)
 
 ---
-> 参考文档：</br>
-> ceph-container: [https://github.com/ceph/ceph-container](https://github.com/ceph/ceph-container/blob/main/README.md)</br>
+> 参考文档：<br>
+> ceph-container: [https://github.com/ceph/ceph-container](https://github.com/ceph/ceph-container/blob/main/README.md) <br>
 > Ceph Document: [cephadm-adding-hosts](https://docs.ceph.com/en/latest/cephadm/host-management/#cephadm-adding-hosts)

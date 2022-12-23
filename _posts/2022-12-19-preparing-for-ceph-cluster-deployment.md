@@ -172,6 +172,6 @@ for HOSTS in ceph-{clienta,clientb,serverc,serverd,servere}
 ```   
 
 ---
-> 参考文档：</br>
-> Ceph  Document: [distribution-specific-installations](https://docs.ceph.com/en/latest/cephadm/install/#distribution-specific-installations)</br>
+> 参考文档：<br>
+> Ceph  Document: [distribution-specific-installations](https://docs.ceph.com/en/latest/cephadm/install/#distribution-specific-installations) <br>
 > cephadm-ansible Document: [https://github.com/ceph/cephadm-ansible](https://github.com/ceph/cephadm-ansible/blob/devel/README.md)

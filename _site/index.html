@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta charset="utf-8">
@@ -11,7 +11,7 @@
 <meta name="generator" content="Jekyll v4.3.1">
 <meta property="og:title" content="主页">
 <meta name="author" content="邢万里">
-<meta property="og:locale" content="en_US">
+<meta property="og:locale" content="zh_CN">
 <meta name="description" content="功不唐捐">
 <meta property="og:description" content="功不唐捐">
 <link rel="canonical" href="http://localhost:4000/">
@@ -27,7 +27,7 @@
   <!---
   <link rel="stylesheet" href="../_includes/views/custom/css/fonts.css">
     --->
-  <link rel="stylesheet" href="../_includes/views/custom/css/fonts.css">
+  <link rel="stylesheet" href="/_includes/views/custom/css/fonts.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-noto-sans@0.0.72/index.min.css">
   <link rel="stylesheet" href="/assets/css/main.css">
@@ -107,10 +107,10 @@ document.addEventListener('DOMContentLoaded', function(event) {
   pre.badge::before {
     content: attr(data-lang);
     color: #fff;
-    background-color: #ff4e00;
+    background-color: #6d6d6d;
     padding: 0 .5em;
     border-radius: 0 2px;
-    text-transform: uppercase;
+    text-transform: lowercase;
     text-align: center;
     min-width: 32px;
     display: inline-block;
@@ -699,12 +699,14 @@ document.addEventListener('DOMContentLoaded', function(event) {
       </h2>
       <div class="post-meta">
         <span class="post-date"><i class="fa fa-calendar"></i> 2022-12-21 Wed</span>
-        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 5 mins</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 19 mins</span>
       </div>
       <a class="post-excerpt" href="/2022/12/21/deploying-ceph-cluster.html">
         <p>
         
 [图片来源 ceph.io]
+
+作者：邢万里
 
 文档说明
 
@@ -716,21 +718,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
   客户端配置：
     
       ceph-clienta
-        
-          CPU: 2vCPU
-          Memory: 4GiB
-          Storage: 10GiBx5
-        
-      
-      ceph-clientb
-        
-          CPU: 2vCPU
-          Memory: 4GiB
-        
-      
-    
-  
-  集群节... <span class="read_more">Read More</span>
+   ... <span class="read_more">Read More</span>
         </p>
       </a>
       <div class="post-tags"><a class="post-tag" href="/tags.html#ceph">#ceph</a></div>
@@ -805,12 +793,14 @@ document.addEventListener('DOMContentLoaded', function(event) {
       </h2>
       <div class="post-meta">
         <span class="post-date"><i class="fa fa-calendar"></i> 2022-12-19 Mon</span>
-        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 3 mins</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 12 mins</span>
       </div>
       <a class="post-excerpt" href="/2022/12/19/preparing-for-ceph-cluster-deployment.html">
         <p>
         
 [图片来源 ceph.io]
+
+作者：邢万里
 
 文档说明
 
@@ -820,20 +810,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
   podman 版本:4.2.0
   ceph 版本： Quincy
   其他要求： git、LVM2、python3.6.8
-  客户端配置：
-    
-      ceph-clienta
-        
-          CPU: 2vCPU
-          Memory: 4GiB
-          Storage: 10GiBx5
-        
-      
-      ceph-clientb
-        
-          CPU: 2vCPU
-          Memory: 4GiB
-... <span class="read_more">Read More</span>
+  客户端配置... <span class="read_more">Read More</span>
         </p>
       </a>
       <div class="post-tags"><a class="post-tag" href="/tags.html#ceph">#ceph</a></div>
@@ -908,7 +885,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
       </h2>
       <div class="post-meta">
         <span class="post-date"><i class="fa fa-calendar"></i> 2022-11-29 Tue</span>
-        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 1 min</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 4 mins</span>
       </div>
       <a class="post-excerpt" href="/2022/11/29/how-to-uninstall-ansible-tower.html">
         <p>
@@ -920,10 +897,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
   使用 ansible-tower-service stop 命令停止 Ansible 相关服务，并使用 ansible-tower-service status  命令确保服务已经停止成功。
     $ ansible-tower-service stop
 Stopping Tower
-Redirecting to /bin/systemctl stop rh-postgresql10-postgresql.service
-Redirecting to /bin/systemctl stop rabbitmq-server.service
-Redirecting to /bin/systemctl stop nginx.service
-Redirecting to /bi... <span class="read_more">Read More</span>
+Redirecting to /bin/syst... <span class="read_more">Read More</span>
         </p>
       </a>
       <div class="post-tags"><a class="post-tag" href="/tags.html#ansible">#ansible</a></div>

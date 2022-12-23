@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-12-21T18:06:27+08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">万里博客</title><subtitle>功不唐捐 </subtitle><author><name>邢万里</name></author><entry><title type="html">开始部署 CEPH 集群</title><link href="http://localhost:4000/2022/12/21/deploying-ceph-cluster.html" rel="alternate" type="text/html" title="开始部署 CEPH 集群" /><published>2022-12-21T00:00:00+08:00</published><updated>2022-12-21T00:00:00+08:00</updated><id>http://localhost:4000/2022/12/21/deploying-ceph-cluster</id><content type="html" xml:base="http://localhost:4000/2022/12/21/deploying-ceph-cluster.html"><![CDATA[<p><img src="/assets/images/2022-12-21/photo-jelly-fish-01.jpg" alt="Ceph" />
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN"><generator uri="https://jekyllrb.com/" version="4.3.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="zh-CN" /><updated>2022-12-23T13:19:55+08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">万里博客</title><subtitle>功不唐捐 </subtitle><author><name>邢万里</name></author><entry><title type="html">开始部署 CEPH 集群</title><link href="http://localhost:4000/2022/12/21/deploying-ceph-cluster.html" rel="alternate" type="text/html" title="开始部署 CEPH 集群" /><published>2022-12-21T00:00:00+08:00</published><updated>2022-12-21T00:00:00+08:00</updated><id>http://localhost:4000/2022/12/21/deploying-ceph-cluster</id><content type="html" xml:base="http://localhost:4000/2022/12/21/deploying-ceph-cluster.html"><![CDATA[<p><img src="/assets/images/2022-12-21/photo-jelly-fish-01.jpg" alt="Ceph" />
 <em>[图片来源 ceph.io]</em></p>
+
+<p><em>作者：邢万里</em></p>
 
 <h2 id="文档说明">文档说明</h2>
 
@@ -250,6 +252,8 @@ Ceph Document: <a href="https://docs.ceph.com/en/latest/cephadm/host-management/
 </blockquote>]]></content><author><name>邢万里</name></author><category term="ceph" /><summary type="html"><![CDATA[[图片来源 ceph.io]]]></summary></entry><entry><title type="html">部署CEPH集群前的准备工作</title><link href="http://localhost:4000/2022/12/19/preparing-for-ceph-cluster-deployment.html" rel="alternate" type="text/html" title="部署CEPH集群前的准备工作" /><published>2022-12-19T00:00:00+08:00</published><updated>2022-12-19T00:00:00+08:00</updated><id>http://localhost:4000/2022/12/19/preparing-for-ceph-cluster-deployment</id><content type="html" xml:base="http://localhost:4000/2022/12/19/preparing-for-ceph-cluster-deployment.html"><![CDATA[<p><img src="/assets/images/2022-12-19/photo-squid-02.jpg" alt="Ceph" />
 <em>[图片来源 ceph.io]</em></p>
 
+<p><em>作者：邢万里</em></p>
+
 <h2 id="文档说明">文档说明</h2>
 
 <ul>
@@ -309,14 +313,14 @@ Ceph Document: <a href="https://docs.ceph.com/en/latest/cephadm/host-management/
 <h2 id="设置系统">设置系统</h2>
 
 <ol>
-  <li>在 <strong>clientc</strong> 创建 <strong>admin</strong> 账户，并设置其为免认证 <strong>SUDO</strong>
+  <li>在 <strong>ceph-clientc</strong> 创建 <strong>admin</strong> 账户，并设置其为免认证 <strong>SUDO</strong>
     <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>useradd admin
 <span class="nv">$ </span>passwd admin
 <span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"admin ALL=(ALL) NOPASSWD:ALL"</span> <span class="o">&gt;</span> /etc/sudoers.d/admin
 <span class="nv">$ </span><span class="nb">chmod </span>0400 /etc/sudoers.d/admin
 </code></pre></div>    </div>
   </li>
-  <li>在 <strong>clientc</strong> 上创建免密码认证的 <strong>ssh</strong> 密钥对，并复制到 <strong>admin</strong> 家目录
+  <li>在 <strong>ceph-clientc</strong> 上创建免密码认证的 <strong>ssh</strong> 密钥对，并复制到 <strong>admin</strong> 家目录
     <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssh-keygen <span class="nt">-q</span> <span class="nt">-t</span> rsa <span class="nt">-f</span> ~/.ssh/id_rsa <span class="nt">-N</span> <span class="s1">''</span>
 <span class="nv">$ </span><span class="nb">cp</span> <span class="nt">-r</span> ~/.ssh  ~admin/.ssh
 <span class="nv">$ </span><span class="nb">chown</span> <span class="nt">-R</span> admin: ~admin/.ssh

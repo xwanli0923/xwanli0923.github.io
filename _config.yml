@@ -51,11 +51,11 @@ yat:
 google_analytics: [G-6P55JXXCXC]
 
 # If you want to generate website sitemap, you can set true
-  sitemap: true
+sitemap: true
 
 # If you want to change site language, you can set lang option
 # lang: "en"  # default lang is en
-  lang: "zh-CN"  
+lang: "zh-CN"  
 
 # Translate languges
 # langs refer to https://cloud.google.com/translate/docs/languages
@@ -75,7 +75,7 @@ google_analytics: [G-6P55JXXCXC]
 # spacegrey: #353535
 # snowwhite: #ffffff
 #
-# theme_color: snowwhite
+theme_color: coolblack
 #
 # Custom color as below:
 # theme_color: "#882250"

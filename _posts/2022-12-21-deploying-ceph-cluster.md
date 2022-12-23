@@ -229,6 +229,7 @@ $  for HOSTS in ceph-{clienta,clientb,serverc,serverd,servere}; \
 
 ---
 > 参考文档：
+>
 > ceph-container: [https://github.com/ceph/ceph-container](https://github.com/ceph/ceph-container/blob/main/README.md)
 >
 > Ceph Document: [cephadm-adding-hosts](https://docs.ceph.com/en/latest/cephadm/host-management/#cephadm-adding-hosts)

@@ -34,10 +34,12 @@ tag: ceph
     - CPU: 2vCPU
     - Memory: 4GiB
     - Storage: 10GiBx5
+
   *其中 ceph-server 属于 bootstrap 节点*  
 
 
 - 网络信息：
+
   **public_network**: 172.16.80.0/24
 
   **cluster_network**: 172.16.90.0/24    

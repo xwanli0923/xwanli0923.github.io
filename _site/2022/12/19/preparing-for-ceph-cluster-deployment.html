@@ -715,10 +715,16 @@ document.addEventListener('DOMContentLoaded', function(event) {
         </ul>
       </li>
     </ul>
+
+    <p><em>其中 ceph-server 属于 bootstrap 节点</em></p>
   </li>
-  <li>网络信息：
-<strong>public_network</strong>: 172.16.80.0/24
-<strong>cluster_network</strong>: 172.16.90.0/24</li>
+  <li>
+    <p>网络信息：</p>
+
+    <p><strong>public_network</strong>: 172.16.80.0/24</p>
+
+    <p><strong>cluster_network</strong>: 172.16.90.0/24</p>
+  </li>
 </ul>
 
 <h2 id="安装-cephadm">安装 CEPHADM</h2>
@@ -766,13 +772,13 @@ document.addEventListener('DOMContentLoaded', function(event) {
 <span class="k">for </span>HOSTS <span class="k">in </span>ceph-<span class="o">{</span>clienta,clientb,serverc,serverd,servere<span class="o">}</span>
   <span class="k">do
    </span>scp <span class="nt">-r</span> /root/.ssh root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span>:/root/.ssh
-   scp  /etc/hosts root@<span class="o">{</span>HOSTS<span class="o">}</span>:/etc/hosts
+   scp  /etc/hosts root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span>:/etc/hosts
    ssh root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span> <span class="s2">"useradd admin"</span>
    ssh root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span> <span class="s2">"echo YOUR_ADMIN_PASSWORD | passwd --stdin admin"</span>
    scp /etc/sudoers.d/admin root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span>:/etc/sudoers.d/admin
-   ssh root@<span class="o">{</span>HOSTS<span class="o">}</span> <span class="s2">"chmod 0400 /etc/sudoers.d/admin"</span>
+   ssh root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span> <span class="s2">"chmod 0400 /etc/sudoers.d/admin"</span>
    scp <span class="nt">-r</span> /root/.ssh root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span>:/home/admin/.ssh
-   ssh root@<span class="o">{</span>HOSTS<span class="o">}</span> <span class="s2">"chown -R admin: /home/admin/.ssh"</span>
+   ssh root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span> <span class="s2">"chown -R admin: /home/admin/.ssh"</span>
   <span class="k">done</span>
 </code></pre></div>    </div>
   </li>
@@ -835,7 +841,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
 <span class="c1">#</span>
 </code></pre></div>        </div>
       </li>
-      <li>使用 <strong>–extra-vars “ceph_origin=community</strong> 执行 <strong>cephadm-preflight.yml</strong>
+      <li>使用 <strong>–extra-vars “ceph_origin=community”</strong> 执行 <strong>cephadm-preflight.yml</strong>
         <div class="language-shell highlighter-rouge">
 <div class="highlight"><pre class="highlight"><code><span class="nv">$ </span> ansible-playbook <span class="nt">-i</span> hosts <span class="nt">--extra-vars</span> <span class="s2">"ceph_origin=community"</span> cephadm-preflight.yml
 </code></pre></div>        </div>
@@ -862,7 +868,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
  <span class="k">do
     </span>scp /root/.ssh/config root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span>:~/.ssh/config
     scp /home/admin/.ssh/config admin@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span>:~/.ssh/config
-    ssh root@<span class="o">{</span>HOSTS<span class="o">}</span> <span class="s2">"systemctl disable firewalld.service --now"</span>
+    ssh root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span> <span class="s2">"systemctl disable firewalld.service --now"</span>
  <span class="k">done</span>
 </code></pre></div>    </div>
   </li>
@@ -870,8 +876,8 @@ document.addEventListener('DOMContentLoaded', function(event) {
 
 <hr>
 <blockquote>
-  <p>参考文档：
-Ceph  Document: <a href="https://docs.ceph.com/en/latest/cephadm/install/#distribution-specific-installations">distribution-specific-installations</a>
+  <p>参考文档：<br>
+Ceph  Document: <a href="https://docs.ceph.com/en/latest/cephadm/install/#distribution-specific-installations">distribution-specific-installations</a> <br>
 cephadm-ansible Document: <a href="https://github.com/ceph/cephadm-ansible/blob/devel/README.md">https://github.com/ceph/cephadm-ansible</a></p>
 </blockquote>
 
@@ -883,9 +889,10 @@ cephadm-ansible Document: <a href="https://github.com/ceph/cephadm-ansible/blob/
 <a class="previous" href="/2022/11/29/how-to-uninstall-ansible-tower.html" title="如何卸载 Ansible Tower">如何卸载 Ansible Tower</a><a class="next" href="/2022/12/21/deploying-ceph-cluster.html" title="开始部署 CEPH 集群">开始部署 CEPH 集群</a>
 </div>
 <div class="post-related">
-      <div>Related Articles</div>
+      <div>相关文章</div>
       <ul>
         <li><a class="post-link" href="/2022/12/19/preparing-for-ceph-cluster-deployment.html" title="开始部署 CEPH 集群">部署CEPH集群前的准备工作</a></li>
+<li><a class="post-link" href="/2022/12/25/reset-root-password.html" title="开始部署 CEPH 集群">在红帽企业版Linux9中如何重置ROOT密码</a></li>
 <li><a class="post-link" href="/2022/11/29/how-to-uninstall-ansible-tower.html" title="开始部署 CEPH 集群">如何卸载 Ansible Tower</a></li>
 <li><a class="post-link" href="/2022/12/21/deploying-ceph-cluster.html" title="开始部署 CEPH 集群">开始部署 CEPH 集群</a></li>
 </ul>

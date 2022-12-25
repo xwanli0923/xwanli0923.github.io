@@ -1,4 +1,66 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN"><generator uri="https://jekyllrb.com/" version="4.3.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="zh-CN" /><updated>2022-12-23T13:29:28+08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">万里博客</title><subtitle>功不唐捐 </subtitle><author><name>邢万里</name></author><entry><title type="html">开始部署 CEPH 集群</title><link href="http://localhost:4000/2022/12/21/deploying-ceph-cluster.html" rel="alternate" type="text/html" title="开始部署 CEPH 集群" /><published>2022-12-21T00:00:00+08:00</published><updated>2022-12-21T00:00:00+08:00</updated><id>http://localhost:4000/2022/12/21/deploying-ceph-cluster</id><content type="html" xml:base="http://localhost:4000/2022/12/21/deploying-ceph-cluster.html"><![CDATA[<p><img src="/assets/images/2022-12-21/photo-jelly-fish-01.jpg" alt="Ceph" />
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN"><generator uri="https://jekyllrb.com/" version="4.3.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="zh-CN" /><updated>2022-12-25T18:00:52+08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">万里博客</title><subtitle>功不唐捐 </subtitle><author><name>邢万里</name></author><entry><title type="html">在红帽企业版Linux9中如何重置ROOT密码</title><link href="http://localhost:4000/2022/12/25/reset-root-password.html" rel="alternate" type="text/html" title="在红帽企业版Linux9中如何重置ROOT密码" /><published>2022-12-25T00:00:00+08:00</published><updated>2022-12-25T00:00:00+08:00</updated><id>http://localhost:4000/2022/12/25/reset-root-password</id><content type="html" xml:base="http://localhost:4000/2022/12/25/reset-root-password.html"><![CDATA[<p><img src="/assets/images/2022-12-25/rhel9-backlit-lines.jpg" alt="rhel9" /></p>
+
+<p><em>[图片来源：RHEL9 内置壁纸]</em></p>
+
+<p><em>作者：邢万里</em></p>
+
+<h2 id="文档说明">文档说明：</h2>
+
+<p>本文叙述了如何在没有对应版本的系统LiveCD进入救援模式下重置 <strong>root</strong> 账户密码的使用场景。</p>
+
+<blockquote>
+  <p>系统版本: Red Hat Enterprise Linux 9.0</p>
+
+  <p>Kernel: 5.14.0-70.13.1.el9_0.x86_64</p>
+</blockquote>
+
+<h2 id="重置-root-密码">重置 ROOT 密码</h2>
+
+<ol>
+  <li>
+    <p>在计算机的本地控制台，发送 <strong>Ctrl+Alt+Del</strong> 组合键来重启系统。</p>
+  </li>
+  <li>
+    <p>当我们看到系统引导菜单界面，按下任意按键（不包括<strong>Enter</strong>)中止倒计时。</p>
+  </li>
+  <li>
+    <p>使用方向按键移动光标到当前内核版本对应的 rescue 条目:
+<img src="/assets/images/2022-12-25/select-kernel-item.png" alt="select-kernel-item" /></p>
+
+    <p>根据屏幕下方的提示，按下 <strong>e</strong> 编辑选择的条目；如果在编辑页面发生改变后，想要恢复默认内容，按下<strong>Esc</strong>回退到当前页面菜单，重新进入即可。</p>
+  </li>
+  <li>
+    <p>进入到编辑页面后，使用方向键移动光标，找到 <strong>linux</strong> 开头的一行，按下 <strong>Ctrl+e</strong> 或者 <strong>End</strong> 键，来到行尾，输入 <strong>rd.break</strong> ；这可以使系统从 <strong>initramfs</strong> 向实际系统移交控制权前中断前进。
+<img src="/assets/images/2022-12-25/kernel-command-line.png" alt="kernel-command-line" />
+  按下 <strong>Ctrl+x</strong> 使用当前更改进行启动</p>
+  </li>
+  <li>
+    <p>启动之后，系统会进入 <strong>emergency mode</strong>, 并提示按下 <strong>Enter</strong> 进入维护,按下 <strong>Enter</strong> 按键：
+<img src="/assets/images/2022-12-25/chroot-jail.png" alt="chroot-jail" /></p>
+  </li>
+  <li>在当前的 <strong>shell (switch_root)</strong> 环境中，磁盘上的系统根目录会以只读的方式挂载在 <strong>/sysroot</strong> 。我们在修改密码时需要更新 <strong>/etc/shadow</strong> 文件，因此我们需要将 <strong>sysroot</strong> 目录重新以读写权限进行挂载：
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mount <span class="nt">-o</span> remount,rw /sysroot
+</code></pre></div>    </div>
+  </li>
+  <li>使用 <strong>chroot</strong> 命令切换系统根目录到 <strong>/sysroot</strong> ，<strong>/sysroot</strong> 是我们系统真实的根目录：
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">chroot</span> /sysroot
+</code></pre></div>    </div>
+  </li>
+  <li>切换成功后 ，设置新的密码:
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>passwd root
+</code></pre></div>    </div>
+  </li>
+  <li>检查系统是否开启了 <strong>SELinux</strong>，如果开启，上述更改会导致系统在下次启动失败，需要创建 <strong>/.autorelabel</strong> 文件，通知系统在下次启动时，确保所有未标记文件能够重新获得 <strong>SELinux</strong> 安全上下文标签:
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">grep</span> ^SELINUX<span class="o">=</span> /etc/selinux/config
+<span class="nv">SELINUX</span><span class="o">=</span>enforcing
+<span class="nv">$ </span><span class="nb">touch</span> /.autorelabel
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>输入 <strong>exit</strong> 命令退出当前 <strong>chroot</strong> Huanjing ,并再次输入 <strong>exit</strong> 命令退出 <strong>initramfs</strong> 调试 <strong>shell</strong> 。</p>
+  </li>
+  <li>系统将自动重启两次，第二次可以看到 <strong>login</strong> 登录提示，输入 <strong>root</strong> 账户和对应新密码登录系统。</li>
+</ol>]]></content><author><name>邢万里</name></author><category term="linux" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">开始部署 CEPH 集群</title><link href="http://localhost:4000/2022/12/21/deploying-ceph-cluster.html" rel="alternate" type="text/html" title="开始部署 CEPH 集群" /><published>2022-12-21T00:00:00+08:00</published><updated>2022-12-21T00:00:00+08:00</updated><id>http://localhost:4000/2022/12/21/deploying-ceph-cluster</id><content type="html" xml:base="http://localhost:4000/2022/12/21/deploying-ceph-cluster.html"><![CDATA[<p><img src="/assets/images/2022-12-21/photo-jelly-fish-01.jpg" alt="Ceph" />
 <em>[图片来源 ceph.io]</em></p>
 
 <p><em>作者：邢万里</em></p>
@@ -246,8 +308,8 @@ quay.io/ceph/ceph@sha256:0560b16bec6e84345f29fb6693cd2430884e6efff16a95d5bdd0bb0
 
 <hr />
 <blockquote>
-  <p>参考文档：
-ceph-container: <a href="https://github.com/ceph/ceph-container/blob/main/README.md">https://github.com/ceph/ceph-container</a>
+  <p>参考文档：<br />
+ceph-container: <a href="https://github.com/ceph/ceph-container/blob/main/README.md">https://github.com/ceph/ceph-container</a> <br />
 Ceph Document: <a href="https://docs.ceph.com/en/latest/cephadm/host-management/#cephadm-adding-hosts">cephadm-adding-hosts</a></p>
 </blockquote>]]></content><author><name>邢万里</name></author><category term="ceph" /><summary type="html"><![CDATA[[图片来源 ceph.io]]]></summary></entry><entry><title type="html">部署CEPH集群前的准备工作</title><link href="http://localhost:4000/2022/12/19/preparing-for-ceph-cluster-deployment.html" rel="alternate" type="text/html" title="部署CEPH集群前的准备工作" /><published>2022-12-19T00:00:00+08:00</published><updated>2022-12-19T00:00:00+08:00</updated><id>http://localhost:4000/2022/12/19/preparing-for-ceph-cluster-deployment</id><content type="html" xml:base="http://localhost:4000/2022/12/19/preparing-for-ceph-cluster-deployment.html"><![CDATA[<p><img src="/assets/images/2022-12-19/photo-squid-02.jpg" alt="Ceph" />
 <em>[图片来源 ceph.io]</em></p>
@@ -294,10 +356,16 @@ Ceph Document: <a href="https://docs.ceph.com/en/latest/cephadm/host-management/
         </ul>
       </li>
     </ul>
+
+    <p><em>其中 ceph-server 属于 bootstrap 节点</em></p>
   </li>
-  <li>网络信息：
-<strong>public_network</strong>: 172.16.80.0/24
-<strong>cluster_network</strong>: 172.16.90.0/24</li>
+  <li>
+    <p>网络信息：</p>
+
+    <p><strong>public_network</strong>: 172.16.80.0/24</p>
+
+    <p><strong>cluster_network</strong>: 172.16.90.0/24</p>
+  </li>
 </ul>
 
 <h2 id="安装-cephadm">安装 CEPHADM</h2>
@@ -340,13 +408,13 @@ Ceph Document: <a href="https://docs.ceph.com/en/latest/cephadm/host-management/
 <span class="k">for </span>HOSTS <span class="k">in </span>ceph-<span class="o">{</span>clienta,clientb,serverc,serverd,servere<span class="o">}</span>
   <span class="k">do
    </span>scp <span class="nt">-r</span> /root/.ssh root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span>:/root/.ssh
-   scp  /etc/hosts root@<span class="o">{</span>HOSTS<span class="o">}</span>:/etc/hosts
+   scp  /etc/hosts root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span>:/etc/hosts
    ssh root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span> <span class="s2">"useradd admin"</span>
    ssh root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span> <span class="s2">"echo YOUR_ADMIN_PASSWORD | passwd --stdin admin"</span>
    scp /etc/sudoers.d/admin root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span>:/etc/sudoers.d/admin
-   ssh root@<span class="o">{</span>HOSTS<span class="o">}</span> <span class="s2">"chmod 0400 /etc/sudoers.d/admin"</span>
+   ssh root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span> <span class="s2">"chmod 0400 /etc/sudoers.d/admin"</span>
    scp <span class="nt">-r</span> /root/.ssh root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span>:/home/admin/.ssh
-   ssh root@<span class="o">{</span>HOSTS<span class="o">}</span> <span class="s2">"chown -R admin: /home/admin/.ssh"</span>
+   ssh root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span> <span class="s2">"chown -R admin: /home/admin/.ssh"</span>
   <span class="k">done</span>
 </code></pre></div>    </div>
   </li>
@@ -405,7 +473,7 @@ Ceph Document: <a href="https://docs.ceph.com/en/latest/cephadm/host-management/
 <span class="c1">#</span>
 </code></pre></div>        </div>
       </li>
-      <li>使用 <strong>–extra-vars “ceph_origin=community</strong> 执行 <strong>cephadm-preflight.yml</strong>
+      <li>使用 <strong>–extra-vars “ceph_origin=community”</strong> 执行 <strong>cephadm-preflight.yml</strong>
         <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span> ansible-playbook <span class="nt">-i</span> hosts <span class="nt">--extra-vars</span> <span class="s2">"ceph_origin=community"</span> cephadm-preflight.yml
 </code></pre></div>        </div>
       </li>
@@ -429,7 +497,7 @@ Ceph Document: <a href="https://docs.ceph.com/en/latest/cephadm/host-management/
  <span class="k">do
     </span>scp /root/.ssh/config root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span>:~/.ssh/config
     scp /home/admin/.ssh/config admin@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span>:~/.ssh/config
-    ssh root@<span class="o">{</span>HOSTS<span class="o">}</span> <span class="s2">"systemctl disable firewalld.service --now"</span>
+    ssh root@<span class="k">${</span><span class="nv">HOSTS</span><span class="k">}</span> <span class="s2">"systemctl disable firewalld.service --now"</span>
  <span class="k">done</span>
 </code></pre></div>    </div>
   </li>
@@ -437,8 +505,8 @@ Ceph Document: <a href="https://docs.ceph.com/en/latest/cephadm/host-management/
 
 <hr />
 <blockquote>
-  <p>参考文档：
-Ceph  Document: <a href="https://docs.ceph.com/en/latest/cephadm/install/#distribution-specific-installations">distribution-specific-installations</a>
+  <p>参考文档：<br />
+Ceph  Document: <a href="https://docs.ceph.com/en/latest/cephadm/install/#distribution-specific-installations">distribution-specific-installations</a> <br />
 cephadm-ansible Document: <a href="https://github.com/ceph/cephadm-ansible/blob/devel/README.md">https://github.com/ceph/cephadm-ansible</a></p>
 </blockquote>]]></content><author><name>邢万里</name></author><category term="ceph" /><summary type="html"><![CDATA[[图片来源 ceph.io]]]></summary></entry><entry><title type="html">如何卸载 Ansible Tower</title><link href="http://localhost:4000/2022/11/29/how-to-uninstall-ansible-tower.html" rel="alternate" type="text/html" title="如何卸载 Ansible Tower" /><published>2022-11-29T00:00:00+08:00</published><updated>2022-11-29T00:00:00+08:00</updated><id>http://localhost:4000/2022/11/29/how-to-uninstall-ansible-tower</id><content type="html" xml:base="http://localhost:4000/2022/11/29/how-to-uninstall-ansible-tower.html"><![CDATA[<p><img src="https://nwzimg.wezhan.cn/contents/sitefiles2033/10168677/images/38319670.jpg" alt="Ansible" /></p>
 

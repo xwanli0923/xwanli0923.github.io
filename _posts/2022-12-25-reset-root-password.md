@@ -58,7 +58,7 @@ tag: linux
    SELINUX=enforcing
    $ touch /.autorelabel
    ```
-10. 输入 **exit** 命令退出当前 **chroot** Huanjing ,并再次输入 **exit** 命令退出 **initramfs** 调试 **shell** 。
+10. 输入 **exit** 命令退出当前 **chroot** 环境 ,并再次输入 **exit** 命令退出 **initramfs** 调试 **shell** 。
 
 11. 系统将自动重启两次，第二次可以看到 **login** 登录提示，输入 **root** 账户和对应新密码登录系统。
 

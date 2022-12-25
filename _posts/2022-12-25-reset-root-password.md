@@ -3,7 +3,6 @@ layout: post
 title: "在红帽企业版Linux9中如何重置ROOT密码"
 date: 2022-12-25
 tag: linux
-categories: Linux系统管理
 ---
 ![rhel9](/assets/images/2022-12-25/rhel9-backlit-lines.jpg)
 

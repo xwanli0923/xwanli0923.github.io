@@ -133,7 +133,7 @@ LISTEN 0      511                 *:80              *:*
 
 - 客户端测试
 
-![](../assets/images/2023-02-13/Snipaste_2023-02-13_16-06-49.png)
+![](https://github.com/xwanli0923/xwanli0923.github.io/blob/24dac55c9b21c0854e1109677858b8021799d2c8/assets/images/2023-02-13/Snipaste_2023-02-13_16-06-49.png)
 
 - 将光盘文件中的内容复制到`/content/almalinux/dvd`中
 
@@ -449,26 +449,26 @@ menu end
 
 - 使用 `UEFI` 引导
 
-![](../assets/images/2023-02-13/Snipaste_2023-02-13_17-41-42.png)
+![](https://github.com/xwanli0923/xwanli0923.github.io/blob/main/assets/images/2023-02-13/Snipaste_2023-02-13_17-41-42.png)
 
 ---
 
-![](../assets/images/2023-02-13/pxe-with-uefi-2023-02-14-10-47-38.png)
+![](https://github.com/xwanli0923/xwanli0923.github.io/blob/main/assets/images/2023-02-13/pxe-with-uefi-2023-02-14-10-47-38.png)
 
 - 开机后使用创建的账户`xwanli`登录
 
-![](../assets/images/2023-02-13/Snipaste_2023-02-14_11-47-59.png)
+![](https://github.com/xwanli0923/xwanli0923.github.io/blob/main/assets/images/2023-02-13/Snipaste_2023-02-14_11-47-59.png)
 
 ---
 
-![](../assets/images/2023-02-13/Snipaste_2023-02-14_11-50-24.png)
+![](https://github.com/xwanli0923/xwanli0923.github.io/blob/main/assets/images/2023-02-13/Snipaste_2023-02-14_11-50-24.png)
 
 - 登录成功
 
-![](../assets/images/2023-02-13/Snipaste_2023-02-14_11-51-09.png)
+![](https://github.com/xwanli0923/xwanli0923.github.io/blob/main/assets/images/2023-02-13/Snipaste_2023-02-14_11-51-09.png)
 
 ---
-![](../assets/images/2023-02-13/Snipaste_2023-02-14_11-53-17.png)
+![](https://github.com/xwanli0923/xwanli0923.github.io/blob/main/assets/images/2023-02-13/Snipaste_2023-02-14_11-53-17.png)
 
 
 

@@ -1,4 +1,533 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN"><generator uri="https://jekyllrb.com/" version="4.3.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="zh-CN" /><updated>2022-12-25T18:09:34+08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">万里博客</title><subtitle>功不唐捐 </subtitle><author><name>邢万里</name></author><entry><title type="html">在红帽企业版Linux9中如何重置ROOT密码</title><link href="http://localhost:4000/2022/12/25/reset-root-password.html" rel="alternate" type="text/html" title="在红帽企业版Linux9中如何重置ROOT密码" /><published>2022-12-25T00:00:00+08:00</published><updated>2022-12-25T00:00:00+08:00</updated><id>http://localhost:4000/2022/12/25/reset-root-password</id><content type="html" xml:base="http://localhost:4000/2022/12/25/reset-root-password.html"><![CDATA[<p><img src="/assets/images/2022-12-25/rhel9-backlit-lines.jpg" alt="rhel9" /></p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN"><generator uri="https://jekyllrb.com/" version="4.3.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="zh-CN" /><updated>2023-02-14T12:03:44+08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">万里博客</title><subtitle>功不唐捐 </subtitle><author><name>邢万里</name></author><entry><title type="html">使用Kickstart自动化部署Linux操作系统</title><link href="http://localhost:4000/2023/02/13/Install-Linux-Using-Kickstart.html" rel="alternate" type="text/html" title="使用Kickstart自动化部署Linux操作系统" /><published>2023-02-13T00:00:00+08:00</published><updated>2023-02-13T00:00:00+08:00</updated><id>http://localhost:4000/2023/02/13/Install-Linux-Using-Kickstart</id><content type="html" xml:base="http://localhost:4000/2023/02/13/Install-Linux-Using-Kickstart.html"><![CDATA[<p><img src="/assets/images/2023-02-13/800px-DSC_3217.JPG" alt="Fedoraject-Anaconda-installer" /></p>
+
+<p><em>[图片来源：<a href="https://fedoraproject.org/wiki/File:DSC_3217.JPG">Fedora Wiki</a> ]</em></p>
+
+<p><em>作者: 邢万里</em></p>
+
+<h1 id="文档说明">文档说明</h1>
+
+<p>本文介绍了如何使用 <strong>Kickstart</strong> 实现自动化部署 <strong>Linux</strong> 操作系统</p>
+
+<ul>
+  <li>系统版本: AlmaLinux 9.1</li>
+  <li>主机名: hub.xwanli0923.github.io</li>
+</ul>
+
+<h1 id="准备阶段">准备阶段</h1>
+
+<h3 id="1-部署http服务器">1. 部署HTTP服务器</h3>
+
+<ul>
+  <li>
+    <p>在已经完成安装的 <strong>AlmaLinux</strong> 中，先配置一个本地 YUM 仓库，便于安装 <code class="language-plaintext highlighter-rouge">httpd</code> 软件包</p>
+  </li>
+  <li>
+    <p>先将系统光盘挂载到 <code class="language-plaintext highlighter-rouge">/mnt</code>目录下</p>
+  </li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span>lsblk 
+NAME                   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+sda                      8:0    0   50G  0 disk 
+├─sda1                   8:1    0  600M  0 part /boot/efi
+├─sda2                   8:2    0    1G  0 part /boot
+└─sda3                   8:3    0 48.4G  0 part 
+  └─cloudshelledu-root 253:0    0   47G  0 lvm  /
+sr0                     11:0    1    8G  0 rom  
+<span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo </span>mount /dev/sr0 /mnt
+mount: /mnt: WARNING: <span class="nb">source </span>write-protected, mounted read-only.
+<span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">df</span> <span class="nt">-Th</span> /mnt
+Filesystem     Type     Size  Used Avail Use% Mounted on
+/dev/sr0       iso9660  8.1G  8.1G     0 100% /mnt
+</code></pre></div></div>
+
+<ul>
+  <li>编写 YUM 仓库文件</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo</span> <span class="nt">-i</span>
+
+<span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo ls</span> /mnt
+AppStream  BaseOS  EFI	images	isolinux  LICENSE  media.repo  TRANS.TBL
+
+<span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo</span> <span class="nt">-i</span>
+
+<span class="o">[</span>root@hub.xwanli0923.github.io ~]# <span class="nb">cat</span> <span class="o">&gt;</span> /etc/yum.repos.d/almalinux_dvd.repo <span class="o">&lt;&lt;-</span><span class="no">EOF</span><span class="sh">
+&gt; [almalinux-9.1-for-x86_64-BaseOS-rpms]
+&gt; name = AlmaLinux DVD BaseOS Local Repository
+&gt; enabled = true
+&gt; baseurl = file:///mnt/BaseOS
+&gt; gpgcheck = false
+&gt; 
+&gt; [almalinux-9.1-for-x86_64-AppStream-rpms]
+&gt; name = AlmaLinux DVD AppStream Local Repository
+&gt; enabled = true
+&gt; baseurl = file:///mnt/AppStream
+&gt; gpgcheck = false
+&gt; EOF
+
+[root@hub.xwanli0923.github.io ~]# exit
+</span></code></pre></div></div>
+
+<ul>
+  <li>禁用默认的软件仓库(可选)</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo </span>dnf repolist
+repo <span class="nb">id                                                                 </span>repo name
+almalinux-9.1-for-x86_64-AppStream-rpms                                 AlmaLinux DVD AppStream Local Repository
+almalinux-9.1-for-x86_64-BaseOS-rpms                                    AlmaLinux DVD BaseOS Local Repository
+appstream                                                               AlmaLinux 9 - AppStream
+baseos                                                                  AlmaLinux 9 - BaseOS
+extras                                                                  AlmaLinux 9 - Extras
+
+<span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo </span>dnf config-manager <span class="nt">--disable</span> appstream
+<span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo </span>dnf config-manager <span class="nt">--disable</span> baseos
+<span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo </span>dnf config-manager <span class="nt">--disable</span> extras
+<span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo </span>dnf repolist
+repo <span class="nb">id                                                                 </span>repo name
+almalinux-9.1-for-x86_64-AppStream-rpms                                 AlmaLinux DVD AppStream Local Repository
+almalinux-9.1-for-x86_64-BaseOS-rpms                                    AlmaLinux DVD BaseOS Local Repository
+
+</code></pre></div></div>
+
+<ul>
+  <li>关闭 <code class="language-plaintext highlighter-rouge">SELinux</code></li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo sed</span> <span class="nt">-i</span> <span class="s1">'s/SELINUX=enforcing/SELINUX=permissive/g'</span> /etc/selinux/config 
+
+<span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo </span>setenforce permissive
+</code></pre></div></div>
+
+<h3 id="2-配置基于http的yum仓库">2. 配置基于HTTP的YUM仓库</h3>
+
+<ul>
+  <li>
+    <p>安装并配置 <code class="language-plaintext highlighter-rouge">httpd</code> 服务，用于安装期间所需的软件包提供YUM仓库</p>
+  </li>
+  <li>
+    <p>安装 <code class="language-plaintext highlighter-rouge">httpd</code> 服务</p>
+  </li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo </span>dnf <span class="nb">install </span>httpd <span class="nt">-y</span>
+</code></pre></div></div>
+
+<ul>
+  <li>创建内容目录</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo mkdir</span> <span class="nt">-p</span> /content/almalinux/<span class="o">{</span>dvd,ks<span class="o">}</span>
+<span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo ln</span> <span class="nt">-s</span> /content /var/www/html/
+</code></pre></div></div>
+
+<ul>
+  <li>允许防火墙通过 <code class="language-plaintext highlighter-rouge">http</code> 流量</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo </span>firewall-cmd <span class="nt">--add-service</span><span class="o">=</span>http 
+<span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo </span>firewall-cmd <span class="nt">--runtime-to-permanent</span>
+</code></pre></div></div>
+
+<ul>
+  <li>运行<code class="language-plaintext highlighter-rouge">httpd</code>服务并允许开机自动运行</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo </span>systemctl <span class="nb">enable </span>httpd <span class="nt">--now</span>
+<span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span>ss <span class="nt">-tplna</span> | <span class="nb">grep</span> :80
+LISTEN 0      511                 <span class="k">*</span>:80              <span class="k">*</span>:<span class="k">*</span>  
+</code></pre></div></div>
+
+<ul>
+  <li>客户端测试</li>
+</ul>
+
+<p><img src="../assets/images/2023-02-13/Snipaste_2023-02-13_16-06-49.png" alt="" /></p>
+
+<ul>
+  <li>将光盘文件中的内容复制到<code class="language-plaintext highlighter-rouge">/content/almalinux/dvd</code>中</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo </span>rsync <span class="nt">-rP</span> /mnt/<span class="k">*</span>   /content/almalinux/dvd/
+</code></pre></div></div>
+
+<ul>
+  <li>修改本地的YUM仓库配置文件</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo sed</span> <span class="nt">-i</span> <span class="s1">'s/mnt/content\/almalinux\/dvd/g'</span> /etc/yum.repos.d/almalinux_dvd.repo 
+</code></pre></div></div>
+
+<h3 id="3-部署-dhcp-服务器">3. 部署 DHCP 服务器</h3>
+
+<ul>
+  <li>安装 <code class="language-plaintext highlighter-rouge">dhcp</code> 软件包</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo </span>dnf <span class="nb">install </span>dhcp-server <span class="nt">-y</span>
+</code></pre></div></div>
+
+<ul>
+  <li>配置 <code class="language-plaintext highlighter-rouge">dhcpd</code> 服务</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span>rpm <span class="nt">-ql</span> dhcp-server | <span class="nb">grep </span>example
+/usr/share/doc/dhcp-server/dhcpd.conf.example
+/usr/share/doc/dhcp-server/dhcpd6.conf.example
+
+<span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo cp</span> /usr/share/doc/dhcp-server/dhcpd.conf.example  /etc/dhcp/dhcpd.conf
+</code></pre></div></div>
+
+<ul>
+  <li>编辑 <code class="language-plaintext highlighter-rouge">dhcpd.conf</code> 文件</li>
+</ul>
+
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">option</span> <span class="err">space</span> <span class="err">pxelinux</span><span class="c">;
+</span><span class="err">option</span> <span class="err">pxelinux.magic</span> <span class="err">code</span> <span class="py">208</span> <span class="p">=</span> <span class="s">string;</span>
+<span class="err">option</span> <span class="err">pxelinux.configfile</span> <span class="err">code</span> <span class="py">209</span> <span class="p">=</span> <span class="s">text;</span>
+<span class="err">option</span> <span class="err">pxelinux.pathprefix</span> <span class="err">code</span> <span class="py">210</span> <span class="p">=</span> <span class="s">text;</span>
+<span class="err">option</span> <span class="err">pxelinux.reboottime</span> <span class="err">code</span> <span class="py">211</span> <span class="p">=</span> <span class="s">unsigned integer 32;</span>
+<span class="err">option</span> <span class="err">architecture-type</span> <span class="err">code</span> <span class="py">93</span> <span class="p">=</span> <span class="s">unsigned integer 16;</span>
+
+<span class="err">subnet</span> <span class="err">172.16.100.0</span> <span class="err">netmask</span> <span class="err">255.255.255.0</span> <span class="err">{</span>
+
+        <span class="err">class</span> <span class="err">"virtual"</span> <span class="err">{</span>
+                <span class="err">match</span> <span class="err">if</span> <span class="err">substring</span> <span class="err">(hardware,</span> <span class="err">1,</span> <span class="err">3)</span> <span class="err">=</span> <span class="err">52:54:00</span> <span class="err">or</span>
+                     <span class="err">substring</span> <span class="err">(hardware,</span> <span class="err">1,</span> <span class="err">3)</span> <span class="err">=</span> <span class="err">00:16:3e</span> <span class="err">or</span>
+                     <span class="err">substring</span> <span class="err">(hardware,</span> <span class="err">1,</span> <span class="err">3)</span> <span class="err">=</span> <span class="err">00:16:36</span><span class="c">;
+</span>        <span class="err">}</span>
+
+        <span class="err">class</span> <span class="err">"microsoft-clients"</span> <span class="err">{</span>
+                <span class="err">match</span> <span class="err">if</span> <span class="err">substring(option</span> <span class="err">vendor-class-identifier,0,4)</span> <span class="err">=</span> <span class="err">"MSFT"</span><span class="c">;
+</span>        <span class="err">}</span>
+
+        <span class="err">class</span> <span class="err">"pxeclients"</span> <span class="err">{</span>
+                <span class="err">match</span> <span class="err">if</span> <span class="err">substring(option</span> <span class="err">vendor-class-identifier,</span> <span class="err">0,</span> <span class="err">9)</span> <span class="err">=</span> <span class="err">"PXEClient"</span><span class="c">;
+</span>
+                <span class="err">next-server</span> <span class="err">172.16.100.100</span><span class="c">;
+</span>                <span class="err">option</span> <span class="err">tftp-server-name</span> <span class="err">"172.16.100.100"</span><span class="c">;
+</span>                <span class="err">if</span> <span class="err">option</span> <span class="py">architecture-type</span> <span class="p">=</span> <span class="s">00:07 {</span>
+                        <span class="c"># UEFI SYSTEMS
+</span>                        <span class="err">filename</span> <span class="err">"BOOTX64.EFI"</span><span class="c">;
+</span>                <span class="err">}</span> <span class="err">else</span> <span class="err">{</span>
+                        <span class="c"># EVERYBODY ELSE (BIOS)
+</span>                        <span class="err">filename</span> <span class="err">"pxelinux.0"</span><span class="c">;
+</span>                <span class="err">}</span>
+        <span class="err">}</span>
+
+
+        <span class="err">option</span> <span class="err">routers</span> <span class="err">172.16.100.1</span><span class="c">;
+</span>        <span class="err">option</span> <span class="err">subnet-mask</span> <span class="err">255.255.255.0</span><span class="c">;
+</span>        <span class="err">option</span> <span class="err">domain-name-servers</span> <span class="err">172.16.100.100</span><span class="c">;
+</span>        <span class="err">default-lease-time</span> <span class="err">21600</span><span class="c">;
+</span>        <span class="err">max-lease-time</span> <span class="err">86400</span><span class="c">;
+</span>
+        <span class="c"># Assign IPs 201-220 to PXE clients
+</span>        <span class="err">pool</span> <span class="err">{</span>
+                <span class="err">deny</span> <span class="err">members</span> <span class="err">of</span> <span class="err">"virtual"</span><span class="c">;
+</span>                <span class="err">allow</span> <span class="err">members</span> <span class="err">of</span> <span class="err">"pxeclients"</span><span class="c">;
+</span>                <span class="err">default-lease-time</span> <span class="err">120</span><span class="c">;
+</span>                <span class="err">max-lease-time</span> <span class="err">180</span><span class="c">;
+</span>                <span class="err">range</span> <span class="err">172.16.100.201</span> <span class="err">172.16.100.220</span><span class="c">;
+</span>        <span class="err">}</span>
+        <span class="err">pool</span> <span class="err">{</span>
+                <span class="err">deny</span> <span class="err">members</span> <span class="err">of</span> <span class="err">"virtual"</span><span class="c">;
+</span>                <span class="err">default-lease-time</span> <span class="err">120</span><span class="c">;
+</span>                <span class="err">max-lease-time</span> <span class="err">180</span><span class="c">;
+</span>                <span class="err">range</span> <span class="err">172.16.100.101</span> <span class="err">172.16.100.200</span><span class="c">;
+</span>        <span class="err">}</span>
+
+<span class="err">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>参考文档：</p>
+
+  <ul>
+    <li>
+      <p>PXELINUX Wiki: <a href="https://wiki.syslinux.org/wiki/index.php?title=PXELINUX#:~:text=DHCP%20options%20Option%20208%20pxelinux.magic%20Earlier%20versions%20of,able%20to%20recognize%20any%20special%20DHCP%20options%20whatsoever.">https://wiki.syslinux.org/wiki/index.php?title=PXELINUX</a></p>
+    </li>
+    <li>
+      <p>RFC 2132: <a href="https://tools.ietf.org/html/rfc2132">DHCP Options and BOOTP Vendor Extensions</a></p>
+    </li>
+    <li>
+      <p>RFC 4578: <a href="https://tools.ietf.org/html/rfc4578">DHCP Options for PXE</a></p>
+    </li>
+    <li>
+      <p>RFC 5071: <a href="https://tools.ietf.org/html/rfc5071">DHCP Options used by PXELINUX</a></p>
+    </li>
+  </ul>
+</blockquote>
+
+<ul>
+  <li>启动 <code class="language-plaintext highlighter-rouge">dhcpd</code> 服务并开机运行</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo </span>systemctl <span class="nb">enable </span>dhcpd <span class="nt">--now</span>
+
+<span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo </span>systemctl status dhcpd
+● dhcpd.service - DHCPv4 Server Daemon
+     Loaded: loaded <span class="o">(</span>/usr/lib/systemd/system/dhcpd.service<span class="p">;</span> enabled<span class="p">;</span> vendor preset: disabled<span class="o">)</span>
+     Active: active <span class="o">(</span>running<span class="o">)</span> since Tue 2023-02-14 00:39:35 CST<span class="p">;</span> 5s ago
+       Docs: man:dhcpd<span class="o">(</span>8<span class="o">)</span>
+             man:dhcpd.conf<span class="o">(</span>5<span class="o">)</span>
+   Main PID: 28022 <span class="o">(</span>dhcpd<span class="o">)</span>
+     Status: <span class="s2">"Dispatching packets..."</span>
+      Tasks: 1 <span class="o">(</span>limit: 24580<span class="o">)</span>
+     Memory: 5.2M
+        CPU: 11ms
+     CGroup: /system.slice/dhcpd.service
+             └─28022 /usr/sbin/dhcpd <span class="nt">-f</span> <span class="nt">-cf</span> /etc/dhcp/dhcpd.conf <span class="nt">-user</span> dhcpd <span class="nt">-group</span> dhcpd <span class="nt">--no-pid</span>
+
+Feb 14 00:39:35 hub.xwanli0923.github.io dhcpd[28022]: Database file: /var/lib/dhcpd/dhcpd.leases
+Feb 14 00:39:35 hub.xwanli0923.github.io dhcpd[28022]: PID file: /var/run/dhcpd.pid
+Feb 14 00:39:35 hub.xwanli0923.github.io dhcpd[28022]: Source compiled to use binary-leases
+Feb 14 00:39:35 hub.xwanli0923.github.io dhcpd[28022]: Wrote 0 class decls to leases file.
+Feb 14 00:39:35 hub.xwanli0923.github.io dhcpd[28022]: Wrote 0 leases to leases file.
+Feb 14 00:39:35 hub.xwanli0923.github.io dhcpd[28022]: Listening on LPF/ens160/00:0c:29:12:6a:60/172.16.100.0/24
+Feb 14 00:39:35 hub.xwanli0923.github.io dhcpd[28022]: Sending on   LPF/ens160/00:0c:29:12:6a:60/172.16.100.0/24
+Feb 14 00:39:35 hub.xwanli0923.github.io dhcpd[28022]: Sending on   Socket/fallback/fallback-net
+Feb 14 00:39:35 hub.xwanli0923.github.io dhcpd[28022]: Server starting service.
+Feb 14 00:39:35 hub.xwanli0923.github.io systemd[1]: Started DHCPv4 Server Daemon.
+</code></pre></div></div>
+
+<ul>
+  <li>添加 <code class="language-plaintext highlighter-rouge">dhcp</code> 服务通过防火墙规则</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo </span>firewall-cmd <span class="nt">--add-service</span><span class="o">=</span>dhcp 
+<span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo </span>firewall-cmd <span class="nt">--runtime-to-permanent</span>
+</code></pre></div></div>
+
+<h3 id="3-准备-tftp-服务器">3. 准备 TFTP 服务器</h3>
+
+<ul>
+  <li>安装 TFTP 服务器</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo </span>dnf <span class="nb">install </span>tftp-server
+</code></pre></div></div>
+
+<ul>
+  <li>启动 <code class="language-plaintext highlighter-rouge">tftp</code> 服务器并允许开机自动运行</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo </span>systemctl <span class="nb">enable </span>tftp.socket <span class="nt">--now</span>
+</code></pre></div></div>
+
+<ul>
+  <li>添加 <code class="language-plaintext highlighter-rouge">tftp</code> 服务通过防护墙规则</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo </span>firewall-cmd <span class="nt">--add-service</span><span class="o">=</span>tftp
+<span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo </span>firewall-cmd <span class="nt">--runtime-to-permanent</span>
+</code></pre></div></div>
+
+<h3 id="4-准备自动应答文件kickstart">4. 准备自动应答文件kickstart</h3>
+
+<ul>
+  <li>
+    <p>kickstart 文件生成可以使用当前系统 <code class="language-plaintext highlighter-rouge">/root/anaconda-ks.cfg</code> 进行修改，或者使用红帽的 <a href="https://access.redhat.com/labs/kickstartconfig/">Kickstart Generator</a> 生成</p>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">kickstart</code>自动应答文件语法可参考：
+    <ul>
+      <li>https://pykickstart.readthedocs.io/en/latest/kickstart-docs.html#what-are-kickstart-installations</li>
+    </ul>
+  </li>
+  <li>
+    <p>本示例采用参考文档以及原有文件修改生成</p>
+  </li>
+  <li>文件位置 <code class="language-plaintext highlighter-rouge">/content/almalinux/ks/install.ks</code></li>
+</ul>
+
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">lang</span> <span class="err">en_US</span>
+<span class="err">keyboard</span> <span class="py">--xlayouts</span><span class="p">=</span><span class="s">'us'</span>
+<span class="err">timezone</span> <span class="err">Asia/Shanghai</span> <span class="err">--utc</span>
+<span class="err">repo</span> <span class="py">--name</span><span class="p">=</span><span class="s">"AppStream"</span> <span class="s">--baseurl=http://172.16.100.100/content/almalinux/dvd/AppStream</span>
+<span class="err">%addon</span> <span class="err">com_redhat_dump</span> <span class="err">--disable</span>
+<span class="err">%end</span>
+<span class="err">network</span>  <span class="py">--bootproto</span><span class="p">=</span><span class="s">dhcp --device=link --activate</span>
+<span class="err">rootpw</span> <span class="err">$2b$10$8yIFVJWpMRASzobheELgT.BZFZQ/Ubu1IysRiYWu95BqEI/4zCYsW</span> <span class="err">--iscrypted</span>
+<span class="c"># The xwanli's password is `cloudshell`
+</span><span class="err">user</span> <span class="py">--groups</span><span class="p">=</span><span class="s">wheel --name=xwanli --password=$6$XZTVGyVbdYxk9wh6$uDcnyVxqJjig90bc7.ti7S5PVTDFk7G3xyix/JT0/9p4KVnUN7EU8VJR5hOjAGcoztca3d4aydvYyTcYDE0Zy1 --iscrypted --gecos="xwanli"</span>
+<span class="err">reboot</span>
+<span class="err">text</span>
+<span class="err">url</span> <span class="py">--url</span><span class="p">=</span><span class="s">http://172.16.100.100/content/almalinux/dvd/BaseOS</span>
+<span class="err">bootloader</span> <span class="py">--append</span><span class="p">=</span><span class="s">"rhgb quiet"</span>
+<span class="err">zerombr</span>
+<span class="err">clearpart</span> <span class="err">--all</span> <span class="err">--initlabel</span>
+<span class="err">part</span> <span class="err">pv.0</span> <span class="py">--fstype</span><span class="p">=</span><span class="s">"lvmpv"</span> <span class="s">--ondisk=sda --size=10240 --grow</span>
+<span class="err">part</span> <span class="err">/boot</span> <span class="py">--fstype</span><span class="p">=</span><span class="s">"xfs"</span> <span class="s">--ondisk=sda --size=2048 </span>
+<span class="err">volgroup</span> <span class="err">cloudshelledu</span> <span class="py">--pesize</span><span class="p">=</span><span class="s">4096 pv.0</span>
+<span class="err">logvol</span> <span class="err">/</span> <span class="py">--fstype</span><span class="p">=</span><span class="s">"xfs"</span> <span class="s">--size=10240 --grow  --name=root --vgname=cloudshelledu</span>
+<span class="err">part</span> <span class="err">/boot/efi</span> <span class="py">--fstype</span><span class="p">=</span><span class="s">efi --size=600 --fsoptions="umask=0077,shortname=winnt"</span>
+
+<span class="err">firstboot</span> <span class="err">--disable</span>
+<span class="err">auth</span> <span class="err">--enableshadow</span> <span class="py">--passalgo</span><span class="p">=</span><span class="s">sha512</span>
+<span class="err">selinux</span> <span class="err">--permissive</span>
+<span class="err">firewall</span> <span class="err">--enabled</span> <span class="err">--ssh</span>
+<span class="err">skipx</span>
+<span class="err">%post</span>
+<span class="err">cat</span> <span class="err">&gt;</span> <span class="err">/etc/yum.repos.d/almalinux_dvd.repo</span> <span class="err">&lt;&lt;-EOF</span>
+<span class="nn">[almalinux-9.1-for-x86_64-BaseOS-rpms]</span>
+<span class="py">name</span> <span class="p">=</span> <span class="s">AlmaLinux DVD BaseOS Local Repository</span>
+<span class="py">enabled</span> <span class="p">=</span> <span class="s">true</span>
+<span class="py">baseurl</span> <span class="p">=</span> <span class="s">http://172.16.100.100/content/almalinux/dvd/BaseOS</span>
+<span class="py">gpgcheck</span> <span class="p">=</span> <span class="s">false</span>
+
+<span class="nn">[almalinux-9.1-for-x86_64-AppStream-rpms]</span>
+<span class="py">name</span> <span class="p">=</span> <span class="s">AlmaLinux DVD AppStream Local Repository</span>
+<span class="py">enabled</span> <span class="p">=</span> <span class="s">true</span>
+<span class="py">baseurl</span> <span class="p">=</span> <span class="s">http://172.16.100.100/content/almalinux/dvd/AppStream</span>
+<span class="py">gpgcheck</span> <span class="p">=</span> <span class="s">false</span>
+<span class="err">EOF</span>
+<span class="err">dnf</span> <span class="err">group</span> <span class="err">install</span> <span class="err">-y</span> <span class="err">"Server</span> <span class="err">with</span> <span class="err">GUI"</span>
+<span class="err">dnf</span> <span class="err">remove</span> <span class="err">-y</span> <span class="err">gnome-initial-setup</span>
+<span class="err">systemctl</span> <span class="err">set-default</span> <span class="err">graphical.target</span>
+<span class="err">%end</span>
+
+<span class="err">%packages</span>
+<span class="err">@^graphical-server-environment</span>
+<span class="err">@guest-agents</span>
+
+<span class="err">%end</span>
+
+</code></pre></div></div>
+
+<h3 id="5-向-tftp中添加所需文件">5. 向 <code class="language-plaintext highlighter-rouge">TFTP</code>中添加所需文件</h3>
+
+<ul>
+  <li>安装 <code class="language-plaintext highlighter-rouge">TFTP Booting</code> 文件,并拷贝 <code class="language-plaintext highlighter-rouge">pxelinux.0</code>文件至 <code class="language-plaintext highlighter-rouge">/var/lib/tftpboot</code></li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo </span>dnf instal <span class="nt">-y</span> syslinux-tftpboot
+<span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo cp</span> /tftpboot/pxelinux.0 /var/lib/tftpboot/
+</code></pre></div></div>
+
+<ul>
+  <li>将光盘中所需文件拷贝至<code class="language-plaintext highlighter-rouge">/var/lib.tftpboot</code></li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo cp</span> <span class="nt">-r</span> /content/almalinux/dvd/EFI/BOOT/<span class="k">*</span>  /var/lib/tftpboot/
+<span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo cp</span> <span class="nt">-r</span> /content/almalinux/dvd/images /var/lib/tftpboot/
+<span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo cp</span> <span class="nt">-r</span> /content/almalinux/dvd/isolinux/<span class="k">*</span>  /var/lib/tftpboot/
+</code></pre></div></div>
+
+<ul>
+  <li>修改 <code class="language-plaintext highlighter-rouge">EFI</code> 引导时所需的配置文件</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo </span>vim /var/lib/tftpboot/grub.cfg 
+<span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo chmod </span>644 /var/lib/tftpboot/grub.cfg 
+</code></pre></div></div>
+
+<ul>
+  <li>修改内容如下：</li>
+</ul>
+
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">set</span> <span class="py">default</span><span class="p">=</span><span class="s">"1"</span>
+
+<span class="err">function</span> <span class="err">load_video</span> <span class="err">{</span>
+  <span class="err">insmod</span> <span class="err">efi_gop</span>
+  <span class="err">insmod</span> <span class="err">efi_uga</span>
+  <span class="err">insmod</span> <span class="err">video_bochs</span>
+  <span class="err">insmod</span> <span class="err">video_cirrus</span>
+  <span class="err">insmod</span> <span class="err">all_video</span>
+<span class="err">}</span>
+
+<span class="err">load_video</span>
+<span class="err">set</span> <span class="py">gfxpayload</span><span class="p">=</span><span class="s">keep</span>
+<span class="err">insmod</span> <span class="err">gzio</span>
+<span class="err">insmod</span> <span class="err">part_gpt</span>
+<span class="err">insmod</span> <span class="err">ext2</span>
+
+<span class="err">set</span> <span class="py">timeout</span><span class="p">=</span><span class="s">60</span>
+<span class="c">### END /etc/grub.d/00_header ###
+</span>
+<span class="err">search</span> <span class="err">--no-floppy</span> <span class="py">--set</span><span class="p">=</span><span class="s">root -l 'AlmaLinux-9-1-x86_64-dvd'</span>
+
+<span class="c">### BEGIN /etc/grub.d/10_linux ###
+</span><span class="err">menuentry</span> <span class="err">'Install</span> <span class="err">AlmaLinux</span> <span class="err">9.1</span> <span class="err">UEFI</span> <span class="err">from</span> <span class="err">hub.xwanli0923.github.io'</span> <span class="err">--class</span> <span class="err">fedora</span> <span class="err">--class</span> <span class="err">gnu-linux</span> <span class="err">--class</span> <span class="err">gnu</span> <span class="err">--class</span> <span class="err">os</span> <span class="err">{</span>
+        <span class="err">linuxefi</span> <span class="err">/images/pxeboot/vmlinuz</span> <span class="py">inst.repo</span><span class="p">=</span><span class="s">http://172.16.100.100/content/almalinux/dvd/ inst.ks=http://172.16.100.100/content/almalinux/ks/install.ks quiet</span>
+        <span class="err">initrdefi</span> <span class="err">/images/pxeboot/initrd.img</span>
+<span class="err">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>创建 <code class="language-plaintext highlighter-rouge">Legacy</code> 引导所需文件</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo mkdir</span> /var/lib/tftpboot/pxelinux.cfg
+<span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo mv</span> /var/lib/tftpboot/isolinux.cfg /var/lib/tftpboot/pxelinux.cfg/default
+<span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo chmod </span>644 /var/lib/tftpboot/pxelinux.cfg/default
+</code></pre></div></div>
+
+<ul>
+  <li>修改内容如下：</li>
+</ul>
+
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">default</span> <span class="err">vesamenu.c32</span>
+<span class="err">timeout</span> <span class="err">600</span>
+
+<span class="err">display</span> <span class="err">boot.msg</span>
+<span class="err">...ommit...</span>
+
+<span class="err">menu</span> <span class="err">tabmsg</span> <span class="err">Press</span> <span class="err">Tab</span> <span class="err">for</span> <span class="err">full</span> <span class="err">configuration</span> <span class="err">options</span> <span class="err">on</span> <span class="err">menu</span> <span class="err">items.</span>
+
+<span class="err">menu</span> <span class="err">separator</span> <span class="c"># insert an empty line
+</span><span class="err">menu</span> <span class="err">separator</span> <span class="c"># insert an empty line
+</span>
+<span class="err">label</span> <span class="err">linux</span>
+  <span class="err">menu</span> <span class="err">label</span> <span class="err">^Install</span> <span class="err">AlmaLinux</span> <span class="err">9.1</span> <span class="err">Legacy</span> <span class="err">from</span> <span class="err">hub.xwanli0923.github.io</span>
+  <span class="err">kernel</span> <span class="err">vmlinuz</span>
+  <span class="err">append</span> <span class="py">initrd</span><span class="p">=</span><span class="s">initrd.img inst.repo=http://172.16.100.100/content/almalinux/dvd/ inst.ks=http://172.16.100.100/content/almalinux/ks/install.ks quiet</span>
+
+
+<span class="err">label</span> <span class="err">local</span>
+  <span class="err">menu</span> <span class="err">label</span> <span class="err">Boot</span> <span class="err">from</span> <span class="err">^local</span> <span class="err">drive</span>
+  <span class="err">localboot</span> <span class="err">0xffff</span>
+
+<span class="err">menu</span> <span class="err">separator</span> <span class="c"># insert an empty line
+</span>
+
+<span class="err">menu</span> <span class="err">end</span>
+</code></pre></div></div>
+
+<h3 id="6-测试部署">6. 测试部署</h3>
+
+<ul>
+  <li>使用 <code class="language-plaintext highlighter-rouge">UEFI</code> 引导</li>
+</ul>
+
+<p><img src="../assets/images/2023-02-13/Snipaste_2023-02-13_17-41-42.png" alt="" /></p>
+
+<hr />
+
+<p><img src="../assets/images/2023-02-13/pxe-with-uefi-2023-02-14-10-47-38.png" alt="" /></p>
+
+<ul>
+  <li>开机后使用创建的账户<code class="language-plaintext highlighter-rouge">xwanli</code>登录</li>
+</ul>
+
+<p><img src="../assets/images/2023-02-13/Snipaste_2023-02-14_11-47-59.png" alt="" /></p>
+
+<hr />
+
+<p><img src="../assets/images/2023-02-13/Snipaste_2023-02-14_11-50-24.png" alt="" /></p>
+
+<ul>
+  <li>登录成功</li>
+</ul>
+
+<p><img src="../assets/images/2023-02-13/Snipaste_2023-02-14_11-51-09.png" alt="" /></p>
+
+<hr />
+<p><img src="../assets/images/2023-02-13/Snipaste_2023-02-14_11-53-17.png" alt="" /></p>
+
+<h3 id="7-结语">7. 结语</h3>
+
+<p>本文主要以UEFI引导的配置为主，如果需要部署<code class="language-plaintext highlighter-rouge">Legacy MBR</code>的引导模式，需要您对<code class="language-plaintext highlighter-rouge">kickstart</code>文件进行调整；或者编写 <code class="language-plaintext highlighter-rouge">%pre ... %end</code>部分，判断系统引导模式，从而自动判断使用<code class="language-plaintext highlighter-rouge">EUFI</code>或<code class="language-plaintext highlighter-rouge">Legacy MBR</code> 。</p>]]></content><author><name>邢万里</name></author><category term="linux" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">在红帽企业版Linux9中如何重置ROOT密码</title><link href="http://localhost:4000/2022/12/25/reset-root-password.html" rel="alternate" type="text/html" title="在红帽企业版Linux9中如何重置ROOT密码" /><published>2022-12-25T00:00:00+08:00</published><updated>2022-12-25T00:00:00+08:00</updated><id>http://localhost:4000/2022/12/25/reset-root-password</id><content type="html" xml:base="http://localhost:4000/2022/12/25/reset-root-password.html"><![CDATA[<p><img src="/assets/images/2022-12-25/rhel9-backlit-lines.jpg" alt="rhel9" /></p>
 
 <p><em>[图片来源：RHEL9 内置壁纸]</em></p>
 
@@ -57,7 +586,7 @@
 </code></pre></div>    </div>
   </li>
   <li>
-    <p>输入 <strong>exit</strong> 命令退出当前 <strong>chroot</strong> Huanjing ,并再次输入 <strong>exit</strong> 命令退出 <strong>initramfs</strong> 调试 <strong>shell</strong> 。</p>
+    <p>输入 <strong>exit</strong> 命令退出当前 <strong>chroot</strong> 环境 ,并再次输入 <strong>exit</strong> 命令退出 <strong>initramfs</strong> 调试 <strong>shell</strong> 。</p>
   </li>
   <li>系统将自动重启两次，第二次可以看到 <strong>login</strong> 登录提示，输入 <strong>root</strong> 账户和对应新密码登录系统。</li>
 </ol>]]></content><author><name>邢万里</name></author><category term="linux" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">开始部署 CEPH 集群</title><link href="http://localhost:4000/2022/12/21/deploying-ceph-cluster.html" rel="alternate" type="text/html" title="开始部署 CEPH 集群" /><published>2022-12-21T00:00:00+08:00</published><updated>2022-12-21T00:00:00+08:00</updated><id>http://localhost:4000/2022/12/21/deploying-ceph-cluster</id><content type="html" xml:base="http://localhost:4000/2022/12/21/deploying-ceph-cluster.html"><![CDATA[<p><img src="/assets/images/2022-12-21/photo-jelly-fish-01.jpg" alt="Ceph" />

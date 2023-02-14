@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN"><generator uri="https://jekyllrb.com/" version="4.3.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="zh-CN" /><updated>2023-02-14T12:03:44+08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">万里博客</title><subtitle>功不唐捐 </subtitle><author><name>邢万里</name></author><entry><title type="html">使用Kickstart自动化部署Linux操作系统</title><link href="http://localhost:4000/2023/02/13/Install-Linux-Using-Kickstart.html" rel="alternate" type="text/html" title="使用Kickstart自动化部署Linux操作系统" /><published>2023-02-13T00:00:00+08:00</published><updated>2023-02-13T00:00:00+08:00</updated><id>http://localhost:4000/2023/02/13/Install-Linux-Using-Kickstart</id><content type="html" xml:base="http://localhost:4000/2023/02/13/Install-Linux-Using-Kickstart.html"><![CDATA[<p><img src="/assets/images/2023-02-13/800px-DSC_3217.JPG" alt="Fedoraject-Anaconda-installer" /></p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN"><generator uri="https://jekyllrb.com/" version="4.3.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="zh-CN" /><updated>2023-02-14T12:17:03+08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">万里博客</title><subtitle>功不唐捐 </subtitle><author><name>邢万里</name></author><entry><title type="html">使用Kickstart自动化部署Linux操作系统</title><link href="http://localhost:4000/2023/02/13/Install-Linux-Using-Kickstart.html" rel="alternate" type="text/html" title="使用Kickstart自动化部署Linux操作系统" /><published>2023-02-13T00:00:00+08:00</published><updated>2023-02-13T00:00:00+08:00</updated><id>http://localhost:4000/2023/02/13/Install-Linux-Using-Kickstart</id><content type="html" xml:base="http://localhost:4000/2023/02/13/Install-Linux-Using-Kickstart.html"><![CDATA[<p><img src="/assets/images/2023-02-13/800px-DSC_3217.JPG" alt="Fedoraject-Anaconda-installer" /></p>
 
 <p><em>[图片来源：<a href="https://fedoraproject.org/wiki/File:DSC_3217.JPG">Fedora Wiki</a> ]</em></p>
 
@@ -240,25 +240,6 @@ LISTEN 0      511                 <span class="k">*</span>:80              <span
 
 <span class="err">}</span>
 </code></pre></div></div>
-
-<blockquote>
-  <p>参考文档：</p>
-
-  <ul>
-    <li>
-      <p>PXELINUX Wiki: <a href="https://wiki.syslinux.org/wiki/index.php?title=PXELINUX#:~:text=DHCP%20options%20Option%20208%20pxelinux.magic%20Earlier%20versions%20of,able%20to%20recognize%20any%20special%20DHCP%20options%20whatsoever.">https://wiki.syslinux.org/wiki/index.php?title=PXELINUX</a></p>
-    </li>
-    <li>
-      <p>RFC 2132: <a href="https://tools.ietf.org/html/rfc2132">DHCP Options and BOOTP Vendor Extensions</a></p>
-    </li>
-    <li>
-      <p>RFC 4578: <a href="https://tools.ietf.org/html/rfc4578">DHCP Options for PXE</a></p>
-    </li>
-    <li>
-      <p>RFC 5071: <a href="https://tools.ietf.org/html/rfc5071">DHCP Options used by PXELINUX</a></p>
-    </li>
-  </ul>
-</blockquote>
 
 <ul>
   <li>启动 <code class="language-plaintext highlighter-rouge">dhcpd</code> 服务并开机运行</li>
@@ -527,7 +508,17 @@ Feb 14 00:39:35 hub.xwanli0923.github.io systemd[1]: Started DHCPv4 Server Daemo
 
 <h3 id="7-结语">7. 结语</h3>
 
-<p>本文主要以UEFI引导的配置为主，如果需要部署<code class="language-plaintext highlighter-rouge">Legacy MBR</code>的引导模式，需要您对<code class="language-plaintext highlighter-rouge">kickstart</code>文件进行调整；或者编写 <code class="language-plaintext highlighter-rouge">%pre ... %end</code>部分，判断系统引导模式，从而自动判断使用<code class="language-plaintext highlighter-rouge">EUFI</code>或<code class="language-plaintext highlighter-rouge">Legacy MBR</code> 。</p>]]></content><author><name>邢万里</name></author><category term="linux" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">在红帽企业版Linux9中如何重置ROOT密码</title><link href="http://localhost:4000/2022/12/25/reset-root-password.html" rel="alternate" type="text/html" title="在红帽企业版Linux9中如何重置ROOT密码" /><published>2022-12-25T00:00:00+08:00</published><updated>2022-12-25T00:00:00+08:00</updated><id>http://localhost:4000/2022/12/25/reset-root-password</id><content type="html" xml:base="http://localhost:4000/2022/12/25/reset-root-password.html"><![CDATA[<p><img src="/assets/images/2022-12-25/rhel9-backlit-lines.jpg" alt="rhel9" /></p>
+<p>本文主要以UEFI引导的配置为主，如果需要部署<code class="language-plaintext highlighter-rouge">Legacy MBR</code>的引导模式，需要您对<code class="language-plaintext highlighter-rouge">kickstart</code>文件进行调整；或者编写 <code class="language-plaintext highlighter-rouge">%pre ... %end</code>部分，判断系统引导模式，从而自动判断使用<code class="language-plaintext highlighter-rouge">EUFI</code>或<code class="language-plaintext highlighter-rouge">Legacy MBR</code> 。</p>
+
+<hr />
+<p>参考文档：</p>
+
+<ul>
+  <li>PXELINUX Wiki: <a href="https://wiki.syslinux.org/wiki/index.php?title=PXELINUX#:~:text=DHCP%20options%20Option%20208%20pxelinux.magic%20Earlier%20versions%20of,able%20to%20recognize%20any%20special%20DHCP%20options%20whatsoever.">https://wiki.syslinux.org/wiki/index.php?title=PXELINUX</a></li>
+  <li>RFC 2132: <a href="https://tools.ietf.org/html/rfc2132">DHCP Options and BOOTP Vendor Extensions</a></li>
+  <li>RFC 4578: <a href="https://tools.ietf.org/html/rfc4578">DHCP Options for PXE</a></li>
+  <li>RFC 5071: <a href="https://tools.ietf.org/html/rfc5071">DHCP Options used by PXELINUX</a></li>
+</ul>]]></content><author><name>邢万里</name></author><category term="linux" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">在红帽企业版Linux9中如何重置ROOT密码</title><link href="http://localhost:4000/2022/12/25/reset-root-password.html" rel="alternate" type="text/html" title="在红帽企业版Linux9中如何重置ROOT密码" /><published>2022-12-25T00:00:00+08:00</published><updated>2022-12-25T00:00:00+08:00</updated><id>http://localhost:4000/2022/12/25/reset-root-password</id><content type="html" xml:base="http://localhost:4000/2022/12/25/reset-root-password.html"><![CDATA[<p><img src="/assets/images/2022-12-25/rhel9-backlit-lines.jpg" alt="rhel9" /></p>
 
 <p><em>[图片来源：RHEL9 内置壁纸]</em></p>
 

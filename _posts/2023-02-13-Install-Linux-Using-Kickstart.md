@@ -226,15 +226,6 @@ subnet 172.16.100.0 netmask 255.255.255.0 {
 }
 ```
 
-> 参考文档： 
-> 
-> - PXELINUX Wiki: [https://wiki.syslinux.org/wiki/index.php?title=PXELINUX](https://wiki.syslinux.org/wiki/index.php?title=PXELINUX#:~:text=DHCP%20options%20Option%20208%20pxelinux.magic%20Earlier%20versions%20of,able%20to%20recognize%20any%20special%20DHCP%20options%20whatsoever.)
-> 
-> - RFC 2132: [DHCP Options and BOOTP Vendor Extensions](https://tools.ietf.org/html/rfc2132)
-> 
-> - RFC 4578: [DHCP Options for PXE](https://tools.ietf.org/html/rfc4578)
-> 
-> - RFC 5071: [DHCP Options used by PXELINUX](https://tools.ietf.org/html/rfc5071)
 
 - 启动 `dhcpd` 服务并开机运行 
 
@@ -486,3 +477,12 @@ menu end
 ### 7. 结语
 
 本文主要以UEFI引导的配置为主，如果需要部署`Legacy MBR`的引导模式，需要您对`kickstart`文件进行调整；或者编写 `%pre ... %end`部分，判断系统引导模式，从而自动判断使用`EUFI`或`Legacy MBR` 。
+
+
+---
+参考文档： 
+ 
+- PXELINUX Wiki: [https://wiki.syslinux.org/wiki/index.php?title=PXELINUX](https://wiki.syslinux.org/wiki/index.php?title=PXELINUX#:~:text=DHCP%20options%20Option%20208%20pxelinux.magic%20Earlier%20versions%20of,able%20to%20recognize%20any%20special%20DHCP%20options%20whatsoever.)
+- RFC 2132: [DHCP Options and BOOTP Vendor Extensions](https://tools.ietf.org/html/rfc2132)
+- RFC 4578: [DHCP Options for PXE](https://tools.ietf.org/html/rfc4578)
+- RFC 5071: [DHCP Options used by PXELINUX](https://tools.ietf.org/html/rfc5071)

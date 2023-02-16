@@ -92,6 +92,7 @@ GEM
     terminal-table (3.0.2)
       unicode-display_width (>= 1.1.1, < 3)
     unicode-display_width (2.3.0)
+    wdm (0.1.1)
     webrick (1.7.0)
 
 PLATFORMS
@@ -101,8 +102,10 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (>= 1.6, < 3.0)
+  jekyll-seo-tag
   jekyll-theme-yat!
   rake (>= 12.0, < 13.0)
+  wdm (>= 0.1.0)
 
 BUNDLED WITH
    2.3.26

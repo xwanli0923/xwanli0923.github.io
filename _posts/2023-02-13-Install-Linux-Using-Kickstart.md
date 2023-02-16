@@ -306,7 +306,7 @@ repo --name="AppStream" --baseurl=http://172.16.100.100/content/almalinux/dvd/Ap
 %end
 network  --bootproto=dhcp --device=link --activate
 rootpw $2b$10$8yIFVJWpMRASzobheELgT.BZFZQ/Ubu1IysRiYWu95BqEI/4zCYsW --iscrypted
-# The xwanli's password is `cloudshell`
+# The xwanli's password is `cloudshelledu`
 user --groups=wheel --name=xwanli --password=$6$XZTVGyVbdYxk9wh6$uDcnyVxqJjig90bc7.ti7S5PVTDFk7G3xyix/JT0/9p4KVnUN7EU8VJR5hOjAGcoztca3d4aydvYyTcYDE0Zy1 --iscrypted --gecos="xwanli"
 reboot
 text

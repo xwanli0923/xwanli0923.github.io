@@ -291,7 +291,7 @@ Feb 14 00:39:35 hub.xwanli0923.github.io systemd[1]: Started DHCPv4 Server Daemo
 - kickstart 文件生成可以使用当前系统 `/root/anaconda-ks.cfg` 进行修改，或者使用红帽的 [Kickstart Generator](https://access.redhat.com/labs/kickstartconfig/) 生成
 
 - `kickstart`自动应答文件语法可参考：
-  -  https://pykickstart.readthedocs.io/en/latest/kickstart-docs.html#what-are-kickstart-installations
+  -  [https://pykickstart.readthedocs.io/en/latest/kickstart-docs.html#what-are-kickstart-installations](https://pykickstart.readthedocs.io/en/latest/kickstart-docs.html#what-are-kickstart-installations)
 
 - 本示例采用参考文档以及原有文件修改生成
 

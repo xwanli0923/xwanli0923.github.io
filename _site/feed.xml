@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN"><generator uri="https://jekyllrb.com/" version="4.3.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="zh-CN" /><updated>2023-02-14T12:17:03+08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">万里博客</title><subtitle>功不唐捐 </subtitle><author><name>邢万里</name></author><entry><title type="html">使用Kickstart自动化部署Linux操作系统</title><link href="http://localhost:4000/2023/02/13/Install-Linux-Using-Kickstart.html" rel="alternate" type="text/html" title="使用Kickstart自动化部署Linux操作系统" /><published>2023-02-13T00:00:00+08:00</published><updated>2023-02-13T00:00:00+08:00</updated><id>http://localhost:4000/2023/02/13/Install-Linux-Using-Kickstart</id><content type="html" xml:base="http://localhost:4000/2023/02/13/Install-Linux-Using-Kickstart.html"><![CDATA[<p><img src="/assets/images/2023-02-13/800px-DSC_3217.JPG" alt="Fedoraject-Anaconda-installer" /></p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN"><generator uri="https://jekyllrb.com/" version="4.3.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="zh-CN" /><updated>2023-02-16T08:46:42+08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">万里博客</title><subtitle>功不唐捐 </subtitle><author><name>邢万里</name></author><entry><title type="html">使用Kickstart自动化部署Linux操作系统</title><link href="http://localhost:4000/2023/02/13/Install-Linux-Using-Kickstart.html" rel="alternate" type="text/html" title="使用Kickstart自动化部署Linux操作系统" /><published>2023-02-13T00:00:00+08:00</published><updated>2023-02-13T00:00:00+08:00</updated><id>http://localhost:4000/2023/02/13/Install-Linux-Using-Kickstart</id><content type="html" xml:base="http://localhost:4000/2023/02/13/Install-Linux-Using-Kickstart.html"><![CDATA[<p><img src="/assets/images/2023-02-13/800px-DSC_3217.JPG" alt="Fedoraject-Anaconda-installer" /></p>
 
 <p><em>[图片来源：<a href="https://fedoraproject.org/wiki/File:DSC_3217.JPG">Fedora Wiki</a> ]</em></p>
 
@@ -143,7 +143,7 @@ LISTEN 0      511                 <span class="k">*</span>:80              <span
   <li>客户端测试</li>
 </ul>
 
-<p><img src="../assets/images/2023-02-13/Snipaste_2023-02-13_16-06-49.png" alt="" /></p>
+<p><img src="/assets/images/2023-02-13/Snipaste_2023-02-13_16-06-49.png" alt="" /></p>
 
 <ul>
   <li>将光盘文件中的内容复制到<code class="language-plaintext highlighter-rouge">/content/almalinux/dvd</code>中</li>
@@ -313,7 +313,7 @@ Feb 14 00:39:35 hub.xwanli0923.github.io systemd[1]: Started DHCPv4 Server Daemo
   </li>
   <li><code class="language-plaintext highlighter-rouge">kickstart</code>自动应答文件语法可参考：
     <ul>
-      <li>https://pykickstart.readthedocs.io/en/latest/kickstart-docs.html#what-are-kickstart-installations</li>
+      <li><a href="https://pykickstart.readthedocs.io/en/latest/kickstart-docs.html#what-are-kickstart-installations">https://pykickstart.readthedocs.io/en/latest/kickstart-docs.html#what-are-kickstart-installations</a></li>
     </ul>
   </li>
   <li>
@@ -481,30 +481,30 @@ Feb 14 00:39:35 hub.xwanli0923.github.io systemd[1]: Started DHCPv4 Server Daemo
   <li>使用 <code class="language-plaintext highlighter-rouge">UEFI</code> 引导</li>
 </ul>
 
-<p><img src="../assets/images/2023-02-13/Snipaste_2023-02-13_17-41-42.png" alt="" /></p>
+<p><img src="/assets/images/2023-02-13/Snipaste_2023-02-13_17-41-42.png" alt="" /></p>
 
 <hr />
 
-<p><img src="../assets/images/2023-02-13/pxe-with-uefi-2023-02-14-10-47-38.png" alt="" /></p>
+<p><img src="/assets/images/2023-02-13/pxe-with-uefi-2023-02-14-10-47-38.png" alt="" /></p>
 
 <ul>
   <li>开机后使用创建的账户<code class="language-plaintext highlighter-rouge">xwanli</code>登录</li>
 </ul>
 
-<p><img src="../assets/images/2023-02-13/Snipaste_2023-02-14_11-47-59.png" alt="" /></p>
+<p><img src="/assets/images/2023-02-13/Snipaste_2023-02-14_11-47-59.png" alt="" /></p>
 
 <hr />
 
-<p><img src="../assets/images/2023-02-13/Snipaste_2023-02-14_11-50-24.png" alt="" /></p>
+<p><img src="/assets/images/2023-02-13/Snipaste_2023-02-14_11-50-24.png" alt="" /></p>
 
 <ul>
   <li>登录成功</li>
 </ul>
 
-<p><img src="../assets/images/2023-02-13/Snipaste_2023-02-14_11-51-09.png" alt="" /></p>
+<p><img src="/assets/images/2023-02-13/Snipaste_2023-02-14_11-51-09.png" alt="" /></p>
 
 <hr />
-<p><img src="../assets/images/2023-02-13/Snipaste_2023-02-14_11-53-17.png" alt="" /></p>
+<p><img src="/assets/images/2023-02-13/Snipaste_2023-02-14_11-53-17.png" alt="" /></p>
 
 <h3 id="7-结语">7. 结语</h3>
 

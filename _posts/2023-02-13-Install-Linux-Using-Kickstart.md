@@ -265,7 +265,7 @@ Feb 14 00:39:35 hub.xwanli0923.github.io systemd[1]: Started DHCPv4 Server Daemo
 [xwanli@hub.xwanli0923.github.io ~]$ sudo firewall-cmd --runtime-to-permanent
 ```
 
-### 3. 准备 TFTP 服务器
+### 4. 准备 TFTP 服务器
 
 - 安装 TFTP 服务器
 
@@ -286,7 +286,7 @@ Feb 14 00:39:35 hub.xwanli0923.github.io systemd[1]: Started DHCPv4 Server Daemo
 [xwanli@hub.xwanli0923.github.io ~]$ sudo firewall-cmd --runtime-to-permanent
 ```
 
-### 4. 准备自动应答文件kickstart
+### 5. 准备自动应答文件kickstart
 
 - kickstart 文件生成可以使用当前系统 `/root/anaconda-ks.cfg` 进行修改，或者使用红帽的 [Kickstart Generator](https://access.redhat.com/labs/kickstartconfig/) 生成
 
@@ -352,7 +352,7 @@ systemctl set-default graphical.target
 
 ```
 
-### 5. 向 `TFTP`中添加所需文件
+### 6. 向 `TFTP`中添加所需文件
 
 - 安装 `TFTP Booting` 文件,并拷贝 `pxelinux.0`文件至 `/var/lib/tftpboot`
 
@@ -445,7 +445,7 @@ menu separator # insert an empty line
 menu end
 ```
 
-### 6. 测试部署
+### 7. 测试部署
 
 - 使用 `UEFI` 引导
 
@@ -474,7 +474,7 @@ menu end
 
 
 
-### 7. 结语
+### 8. 结语
 
 本文主要以UEFI引导的配置为主，如果需要部署`Legacy MBR`的引导模式，需要您对`kickstart`文件进行调整；或者编写 `%pre ... %end`部分，判断系统引导模式，从而自动判断使用`EUFI`或`Legacy MBR` 。
 

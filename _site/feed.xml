@@ -1,8 +1,436 @@
-<<<<<<< Updated upstream
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN"><generator uri="https://jekyllrb.com/" version="4.3.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="zh-CN" /><updated>2023-02-16T09:27:50+08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">万里博客</title><subtitle>功不唐捐 </subtitle><author><name>邢万里</name></author><entry><title type="html">使用Kickstart自动化部署Linux操作系统</title><link href="http://localhost:4000/2023/02/13/Install-Linux-Using-Kickstart.html" rel="alternate" type="text/html" title="使用Kickstart自动化部署Linux操作系统" /><published>2023-02-13T00:00:00+08:00</published><updated>2023-02-13T00:00:00+08:00</updated><id>http://localhost:4000/2023/02/13/Install-Linux-Using-Kickstart</id><content type="html" xml:base="http://localhost:4000/2023/02/13/Install-Linux-Using-Kickstart.html"><![CDATA[<p><img src="/assets/images/2023-02-13/800px-DSC_3217.JPG" alt="Fedoraject-Anaconda-installer" /></p>
-=======
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN"><generator uri="https://jekyllrb.com/" version="4.3.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="zh-CN" /><updated>2023-02-16T09:30:34+08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">万里博客</title><subtitle>功不唐捐 </subtitle><author><name>邢万里</name></author><entry><title type="html">使用Kickstart自动化部署Linux操作系统</title><link href="http://localhost:4000/2023/02/13/Install-Linux-Using-Kickstart.html" rel="alternate" type="text/html" title="使用Kickstart自动化部署Linux操作系统" /><published>2023-02-13T00:00:00+08:00</published><updated>2023-02-13T00:00:00+08:00</updated><id>http://localhost:4000/2023/02/13/Install-Linux-Using-Kickstart</id><content type="html" xml:base="http://localhost:4000/2023/02/13/Install-Linux-Using-Kickstart.html"><![CDATA[<p><img src="/assets/images/2023-02-13/800px-DSC_3217.JPG" alt="Fedoraject-Anaconda-installer" /></p>
->>>>>>> Stashed changes
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN"><generator uri="https://jekyllrb.com/" version="4.3.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="zh-CN" /><updated>2023-02-20T16:59:07+08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">万里博客</title><subtitle>功不唐捐 </subtitle><author><name>邢万里</name></author><entry><title type="html">在 Fedora CoreOS 中运行容器</title><link href="http://localhost:4000/2023/02/20/running-a-container-with-fcos.html" rel="alternate" type="text/html" title="在 Fedora CoreOS 中运行容器" /><published>2023-02-20T00:00:00+08:00</published><updated>2023-02-20T00:00:00+08:00</updated><id>http://localhost:4000/2023/02/20/running-a-container-with-fcos</id><content type="html" xml:base="http://localhost:4000/2023/02/20/running-a-container-with-fcos.html"><![CDATA[<p><img src="/assets/images/2023-02-20/welcomefedoracoreos.jpg" alt="Fedoraject-Anaconda-installer" /></p>
+
+<p><em>[图片来源：<a href="https://docs.fedoraproject.org/en-US/fedora-coreos/_images/welcomefedoracoreos.jpg">Fedora Docs</a> ]</em></p>
+
+<p><em>作者: 邢万里</em></p>
+
+<p>Fedora CoreOS is an automatically updating, minimal, monolithic, container-focused operating system, designed for clusters but also operable standalone, optimized for Kubernetes but also great without it. It aims to combine the best of both CoreOS Container Linux and Fedora Atomic Host, integrating technology like Ignition from Container Linux with rpm-ostree and SELinux hardening from Project Atomic. Its goal is to provide the best container host to run containerized workloads securely and at scale.<br />
+<em>🪧摘自 <a href="https://docs.fedoraproject.org/jp/fedora-coreos/">Fedora CoreOS Documentation</a></em></p>
+
+<h1 id="写在前面">写在前面</h1>
+
+<p>随着云原生的快速发展，将业务系统部署以 <strong>Kubernetes</strong> 这种容器编排系统为主的用户越来越多，在使用过程中，底层操作系统由于无法实现一致性配置而导致的问题频频出现，因此一个专门用于运行容器，使用了容器的设计理念的操作系统应运而生，常见的容器操作系统有 <strong>Fedora CoreOS</strong> 、 <strong>Red Hat CoreOS</strong> 、<strong>RancherOS</strong> 、<strong>Photon</strong> 、 <strong>KubeOS</strong> 等</p>
+
+<p>本文使用 <strong>Fedora CoreOS</strong> 作为样例运行一个简单的容器。</p>
+
+<p><em>扩展知识</em>： <strong>Fedora</strong> 在早期有一个专门运行容器的产品 <strong>Atomic</strong> ，后来红帽将 <strong>CoreOS</strong> 收购之后，红帽将 <strong>Atomic</strong> 和 <strong>CoreOS</strong> 合并为 <strong>Fedora CoreOS</strong> ，简称 <em>fcos</em>，商业版本为<strong>Red Hat CoreOS</strong>，简称<em>RHCOS</em>。</p>
+
+<h1 id="准备工作">准备工作</h1>
+
+<p>您需要实现准备一台和将来部署 <strong>FCOS</strong> 能够通信的一个 web 服务器，用用于存放 <strong>ignition</strong> 文件。</p>
+
+<ul>
+  <li>我这里使用的一台桌面版本 Linux 发行版：<strong>Linux Mint 21.1</strong></li>
+</ul>
+
+<p><img src="/assets/images/2023-02-20/Snipaste_2023-02-20_15-29-31.png" alt="" /></p>
+
+<ul>
+  <li>网络信息如下</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌💁  devops @ 💻  workstation <span class="k">in</span> 📁  ~
+└❯ ip addr show ens37
+3: ens37: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    <span class="nb">link</span>/ether 00:0c:29:d9:67:b5 brd ff:ff:ff:ff:ff:ff
+    altname enp2s5
+    inet 172.25.254.228/24 brd 172.25.254.255 scope global dynamic noprefixroute ens37
+       valid_lft 155sec preferred_lft 155sec
+    inet6 fe80::712d:e12e:ba61:7545/64 scope <span class="nb">link </span>noprefixroute 
+       valid_lft forever preferred_lft forever
+</code></pre></div></div>
+
+<ul>
+  <li>并且我已经准备好了 Web 服务器</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌💁  devops @ 💻  workstation <span class="k">in</span> 📁  ~
+└❯ <span class="nb">sudo </span>systemctl status apache2.service
+● apache2.service - The Apache HTTP Server
+     Loaded: loaded <span class="o">(</span>/lib/systemd/system/apache2.service<span class="p">;</span> enabled<span class="p">;</span> vendor preset: enabled<span class="o">)</span>
+     Active: active <span class="o">(</span>running<span class="o">)</span> since Sun 2023-02-19 22:33:33 MST<span class="p">;</span> 1h 58min ago
+       Docs: https://httpd.apache.org/docs/2.4/
+    Process: 947 <span class="nv">ExecStart</span><span class="o">=</span>/usr/sbin/apachectl start <span class="o">(</span><span class="nv">code</span><span class="o">=</span>exited, <span class="nv">status</span><span class="o">=</span>0/SUCCESS<span class="o">)</span>
+    Process: 5087 <span class="nv">ExecReload</span><span class="o">=</span>/usr/sbin/apachectl graceful <span class="o">(</span><span class="nv">code</span><span class="o">=</span>exited, <span class="nv">status</span><span class="o">=</span>0/SUCCESS<span class="o">)</span>
+   Main PID: 1031 <span class="o">(</span>apache2<span class="o">)</span>
+      Tasks: 55 <span class="o">(</span>limit: 2182<span class="o">)</span>
+     Memory: 6.5M
+        CPU: 289ms
+     CGroup: /system.slice/apache2.service
+             ├─1031 /usr/sbin/apache2 <span class="nt">-k</span> start
+             ├─5105 /usr/sbin/apache2 <span class="nt">-k</span> start
+             └─5106 /usr/sbin/apache2 <span class="nt">-k</span> start
+
+Feb 19 22:33:31 workstation.lab.example.net systemd[1]: Starting The Apache HTTP Server...
+Feb 19 22:33:33 workstation.lab.example.net systemd[1]: Started The Apache HTTP Server.
+Feb 20 00:00:00 workstation.lab.example.net systemd[1]: Reloading The Apache HTTP Server...
+Feb 20 00:00:00 workstation.lab.example.net systemd[1]: Reloaded The Apache HTTP Server.
+
+
+┌💁  devops @ 💻  workstation <span class="k">in</span> 📁  ~
+└❯ ss <span class="nt">-tplna</span> | <span class="nb">grep</span> :8080
+LISTEN 0      511                 <span class="k">*</span>:8080               <span class="k">*</span>:<span class="k">*</span>           
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>请事先下载 <strong>FCOS</strong> 镜像</p>
+
+    <ul>
+      <li>
+        <p>最新版本Fedora下载站点 <a href="https://getfedora.org/">https://getfedora.org/</a></p>
+      </li>
+      <li>
+        <p>本文使用镜像的链接 <a href="https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/37.20230122.3.0/x86_64/fedora-coreos-37.20230122.3.0-live.x86_64.iso">https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/37.20230122.3.0/x86_64/fedora-coreos-37.20230122.3.0-live.x86_64.iso</a></p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="1-在linuxmint中安装butane">1. 在<strong>LinuxMint</strong>中安装<strong>butane</strong></h3>
+
+<p><strong>Fedora</strong>社区为 Linux 客户端提供了两种方式来安装<strong>butane</strong>工具，这种工具可以将编写好的<code class="language-plaintext highlighter-rouge">ignition</code>文件转为 JSON 格式；第一种使用 <strong>dnf</strong> 进行安装，第二种使用 <strong>brew</strong>安装；我们采用 <strong>brew</strong>方式安装</p>
+
+<ul>
+  <li>首先安装 <strong>brew</strong> 工具</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌💁  devops @ 💻  workstation <span class="k">in</span> 📁  ~
+└❯ /bin/bash <span class="nt">-c</span> <span class="s2">"</span><span class="si">$(</span>curl <span class="nt">-fsSL</span> https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh<span class="si">)</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<ul>
+  <li>配置 <strong>brew</strong> 工具</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌💁  devops @ 💻  workstation <span class="k">in</span> 📁  ~
+└❯ <span class="o">(</span><span class="nb">echo</span><span class="p">;</span> <span class="nb">echo</span> <span class="s1">'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"'</span><span class="o">)</span> <span class="o">&gt;&gt;</span> /home/devops/.bashrc
+
+┌💁  devops @ 💻  workstation <span class="k">in</span> 📁  ~
+└❯  <span class="nb">sudo </span>apt-get <span class="nb">install </span>build-essential
+
+┌💁  devops @ 💻  workstation <span class="k">in</span> 📁  ~
+└❯  <span class="nb">source</span> ~/.bashrc
+
+┌💁  devops @ 💻  workstation <span class="k">in</span> 📁  ~
+└❯  brew <span class="nb">install </span>gcc
+</code></pre></div></div>
+
+<ul>
+  <li>使用 <strong>brew</strong>安装 <strong>butane</strong></li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌💁  devops @ 💻  workstation <span class="k">in</span> 📁  ~
+└❯  brew <span class="nb">install </span>butane
+</code></pre></div></div>
+
+<ul>
+  <li>生成密钥对</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌💁  devops @ 💻  workstation <span class="k">in</span> 📁  ~
+└❯  ssh-keygen <span class="nt">-t</span> rsa <span class="nt">-N</span> <span class="s1">''</span> <span class="nt">-b</span> 2048 <span class="nt">-f</span> ~/.ssh/id_rsa <span class="nt">-q</span>
+
+┌💁  devops @ 💻  workstation <span class="k">in</span> 📁  ~
+└❯ <span class="nb">cat</span> ~/.ssh/id_rsa.pub 
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCms5d2FmXtXmhSJIezA812ymi4uT3XELM508FkD/4Pv+wXE0gl/aN7bPCVD6qxpHbXHgj6nWTIoej3pZeEYEOGlXua98tSyu3aaBfj5UIY5eF8838EireSJSVZPj3k6aB8ryL5W4G/4buwW6IzvvRRrknJDsFvajs5LvLiLUNrag/i9PIQZ0VZZQbLhx0/ZJCDAFIREpXuyPM+FsS2TYOnRZNeD/2IFscI05Xe4mA0NdI8Fzfji0c0dIBKYDD3mKFQ7qhvaLD7Q2v6I9hyfe5nZqAcaPW2f+rfsycdkhSOCZNQ7DbfWm7ILbAz+FFAUuzrMseytoEfOXbemQpgM7q5hIJgZkLOb38o4e6uXH+A43svE5U1tWKpaX2yRDSvi4rP9Nae0SdrkBzFG9dPzQvbEFYla+6BiFh+iRnnOLegni1WT9GjOonKay0/XCxH9s8mlXK1hKd/jgWf9j/BTkAOb++NZDCV5fsfGG+wnMUAcc44U6MNij+w3n4u6BiqAB0<span class="o">=</span> devops@workstation.lab.example.net
+</code></pre></div></div>
+
+<h3 id="2-查看fcos节点网络硬件等信息">2. 查看FCOS节点网络、硬件等信息</h3>
+
+<ul>
+  <li>创建一台虚拟机，设置为 <em>UEFI</em> ，使用 <strong>fcos</strong> 光盘引导,界面如下</li>
+</ul>
+
+<p><img src="/assets/images/2023-02-20/Snipaste_2023-02-20_15-51-53.png" alt="" /></p>
+
+<ul>
+  <li>查看网卡名</li>
+</ul>
+
+<p><img src="/assets/images/2023-02-20/Snipaste_2023-02-20_15-53-04.png" alt="" /></p>
+
+<ul>
+  <li>
+    <p>如果您的虚拟机没有通过<strong>DHCP</strong>获取地址,需要手动设置网络信息，确保可以和提供<code class="language-plaintext highlighter-rouge">ignition</code>文件的主机进行通信</p>
+
+    <ul>
+      <li>设置网络的命令为 <code class="language-plaintext highlighter-rouge">sudo nmtui</code></li>
+    </ul>
+
+    <p><img src="/assets/images/2023-02-20/Snipaste_2023-02-20_15-55-12.png" alt="" /></p>
+  </li>
+</ul>
+
+<hr />
+<p><img src="/assets/images/2023-02-20/Snipaste_2023-02-20_15-55-42.png" alt="" /></p>
+
+<hr />
+<p><img src="/assets/images/2023-02-20/Snipaste_2023-02-20_15-56-21.png" alt="" /></p>
+
+<hr />
+
+<ul>
+  <li>激活网络连接</li>
+</ul>
+
+<p><img src="/assets/images/2023-02-20/Snipaste_2023-02-20_15-57-04.png" alt="" /></p>
+
+<hr />
+<ul>
+  <li>
+    <p>使状态由 <code class="language-plaintext highlighter-rouge">Deactivate</code> 变为 <code class="language-plaintext highlighter-rouge">Activate</code>，再变为 <code class="language-plaintext highlighter-rouge">Deactivate</code>
+  <img src="/assets/images/2023-02-20/Snipaste_2023-02-20_15-58-00.png" alt="" /></p>
+  </li>
+  <li>
+    <p>检查是否生效</p>
+  </li>
+</ul>
+
+<p><img src="/assets/images/2023-02-20/Snipaste_2023-02-20_16-05-57.png" alt="" /></p>
+
+<ul>
+  <li>检查磁盘信息</li>
+</ul>
+
+<p><img src="/assets/images/2023-02-20/Snipaste_2023-02-20_16-09-19.png" alt="" /></p>
+
+<h3 id="3-开始编写ignition文件">3. 开始编写<code class="language-plaintext highlighter-rouge">ignition</code>文件</h3>
+
+<ul>
+  <li>创建文件 <code class="language-plaintext highlighter-rouge">fcos36.yml</code>， 根据需要编写的<code class="language-plaintext highlighter-rouge">ignition</code>文件如下：</li>
+</ul>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">variant</span><span class="pi">:</span> <span class="s">fcos</span>
+<span class="na">version</span><span class="pi">:</span> <span class="s">1.4.0</span>
+<span class="c1"># 创建用户 core 并使用 ssh 认证登录</span>
+<span class="na">passwd</span><span class="pi">:</span>
+  <span class="na">users</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">core</span>
+      <span class="na">ssh_authorized_keys</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="s">ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCms5d2FmXtXmhSJIezA812ymi4uT3XELM508FkD/4Pv+wXE0gl/aN7bPCVD6qxpHbXHgj6nWTIoej3pZeEYEOGlXua98tSyu3aaBfj5UIY5eF8838EireSJSVZPj3k6aB8ryL5W4G/4buwW6IzvvRRrknJDsFvajs5LvLiLUNrag/i9PIQZ0VZZQbLhx0/ZJCDAFIREpXuyPM+FsS2TYOnRZNeD/2IFscI05Xe4mA0NdI8Fzfji0c0dIBKYDD3mKFQ7qhvaLD7Q2v6I9hyfe5nZqAcaPW2f+rfsycdkhSOCZNQ7DbfWm7ILbAz+FFAUuzrMseytoEfOXbemQpgM7q5hIJgZkLOb38o4e6uXH+A43svE5U1tWKpaX2yRDSvi4rP9Nae0SdrkBzFG9dPzQvbEFYla+6BiFh+iRnnOLegni1WT9GjOonKay0/XCxH9s8mlXK1hKd/jgWf9j/BTkAOb++NZDCV5fsfGG+wnMUAcc44U6MNij+w3n4u6BiqAB0=</span>
+
+<span class="na">storage</span><span class="pi">:</span>
+<span class="c1"># 创建系统的根分区为 8GB</span>
+  <span class="na">disks</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">device</span><span class="pi">:</span> <span class="s">/dev/disk/by-id/coreos-boot-disk</span>
+      <span class="na">wipe_table</span><span class="pi">:</span> <span class="no">false</span>
+      <span class="na">partitions</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">number</span><span class="pi">:</span> <span class="m">4</span>
+          <span class="na">label</span><span class="pi">:</span> <span class="s">root</span>
+          <span class="na">size_mib</span><span class="pi">:</span> <span class="m">8192</span>
+          <span class="na">resize</span><span class="pi">:</span> <span class="no">true</span>
+        <span class="pi">-</span> <span class="na">size_mib</span><span class="pi">:</span> <span class="m">0</span>
+          <span class="na">label</span><span class="pi">:</span> <span class="s">var</span>
+<span class="c1"># 配置网卡 ens160 的网络信息</span>
+  <span class="na">files</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">path</span><span class="pi">:</span> <span class="s">/etc/NetworkManager/system-connections/ens160.nmconnection</span>
+      <span class="na">mode</span><span class="pi">:</span> <span class="m">0600</span>
+      <span class="na">contents</span><span class="pi">:</span>
+        <span class="na">inline</span><span class="pi">:</span> <span class="pi">|</span>
+          <span class="s">[connection]</span>
+          <span class="s">id=ens160</span>
+          <span class="s">type=ethernet</span>
+          <span class="s">interface-name=ens160</span>
+          <span class="s">[ipv4]</span>
+          <span class="s">address1=172.25.254.221/24;172.25.254.254</span>
+          <span class="s">dns=8.8.8.8;</span>
+          <span class="s">dns-search=lab.example.net</span>
+          <span class="s">may-fail=false</span>
+          <span class="s">method=manual</span>
+<span class="c1"># 设置主机名</span>
+    <span class="pi">-</span> <span class="na">path</span><span class="pi">:</span> <span class="s">/etc/hostname</span>
+      <span class="na">mode</span><span class="pi">:</span> <span class="m">0644</span>
+      <span class="na">contents</span><span class="pi">:</span>
+        <span class="na">inline</span><span class="pi">:</span> <span class="s">fcos.xwanli0923.github.io</span>
+<span class="c1"># 创建容器本地持久化存储位置 </span>
+  <span class="na">directories</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">path</span><span class="pi">:</span> <span class="s">/opt/website/html</span>
+      <span class="na">overwrite</span><span class="pi">:</span> <span class="no">true</span>
+
+<span class="c1"># 创建容器所需的文件</span>
+    <span class="pi">-</span> <span class="na">path</span><span class="pi">:</span> <span class="s">/opt/website/html/index.html</span>
+      <span class="na">overwrite</span><span class="pi">:</span> <span class="no">true</span>
+      <span class="na">contents</span><span class="pi">:</span>
+        <span class="na">inline</span><span class="pi">:</span> <span class="s">&lt;h1&gt;Hello, I am Xing Wanli. Welcome to cloudshelledu!&lt;/h1&gt;</span>
+      <span class="na">mode</span><span class="pi">:</span> <span class="m">0644</span>
+<span class="c1"># 更改时区</span>
+<span class="err">  </span><span class="na">links</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">path</span><span class="pi">:</span> <span class="s">/etc/localtime</span>
+      <span class="na">target</span><span class="pi">:</span> <span class="s">../usr/share/zoneinfo/Asia/Shanghai</span>
+<span class="c1"># 创建指定的文件系统</span>
+  <span class="na">filesystems</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">path</span><span class="pi">:</span> <span class="s">/var</span>
+      <span class="na">device</span><span class="pi">:</span> <span class="s">/dev/disk/by-partlabel/var</span>
+      <span class="na">format</span><span class="pi">:</span> <span class="s">ext4</span>
+      <span class="na">with_mount_unit</span><span class="pi">:</span> <span class="no">true</span>
+<span class="c1"># 创建一个 Systemd Unit 文件，用于开机运行 podman 容器，容器名为 mywebserver ，映射主机端口为 80 </span>
+<span class="na">systemd</span><span class="pi">:</span>
+  <span class="na">units</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">container-mywebserver.service</span>
+      <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
+      <span class="na">contents</span><span class="pi">:</span> <span class="pi">|</span>
+        <span class="s">[Unit]</span>
+        <span class="s">Description=Podman container-mywebserver.service</span>
+        <span class="s">Documentation=man:podman-generate-systemd(1)</span>
+        <span class="s">Wants=network-online.target</span>
+        <span class="s">After=network-online.target</span>
+        <span class="s">RequiresMountsFor=%t/containers</span>
+
+        <span class="s">[Service]</span>
+        <span class="s">Environment=PODMAN_SYSTEMD_UNIT=%n</span>
+        <span class="s">Restart=on-failure</span>
+        <span class="s">TimeoutStopSec=70</span>
+        <span class="s">ExecStartPre=/bin/rm -f %t/%n.ctr-id</span>
+        <span class="s">ExecStart=/usr/bin/podman run --cidfile=%t/%n.ctr-id --sdnotify=conmon --cgroups=no-conmon --rm --replace -d --name mywebserver -v /opt/website/html:/usr/local/apache2/htdocs:Z -p 80:80 docker.io/library/httpd:latest</span>
+        <span class="s">ExecStop=/usr/bin/podman stop --ignore --cidfile=%t/%n.ctr-id</span>
+        <span class="s">ExecStopPost=/usr/bin/podman rm -f --ignore --cidfile=%t/%n.ctr-id</span>
+        <span class="s">Type=notify</span>
+        <span class="s">NotifyAccess=all</span>
+
+        <span class="s">[Install]</span>
+        <span class="s">WantedBy=multi-user.target default.target</span>
+</code></pre></div></div>
+
+<ul>
+  <li>将<code class="language-plaintext highlighter-rouge">ignition</code>文件转为 <code class="language-plaintext highlighter-rouge">ign</code> 格式</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌💁  devops @ 💻  workstation <span class="k">in</span> 📁  ~
+└❯ butane <span class="nt">--pretty</span> <span class="nt">--strict</span> fcos36.yml <span class="nt">--output</span> fcos36.ign 
+</code></pre></div></div>
+
+<ul>
+  <li>将<code class="language-plaintext highlighter-rouge">ignition</code>文件存放在 Web 站点对应的目录下</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌💁  devops @ 💻  workstation <span class="k">in</span> 📁  ~
+└❯ <span class="nb">sudo cp </span>fcos36.ign /var/www/html/ign/
+</code></pre></div></div>
+
+<ul>
+  <li>测试文件是否能访问</li>
+</ul>
+
+<p><img src="/assets/images/2023-02-20/Snipaste_2023-02-20_16-19-12.png" alt="" /></p>
+
+<h3 id="4-使用ignition文件开始部署-fcos">4. 使用<code class="language-plaintext highlighter-rouge">ignition</code>文件开始部署 FCOS</h3>
+
+<ul>
+  <li>在FCOS的虚拟机中执行命令</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>core@localhost ~]<span class="nv">$ </span><span class="nb">exit</span>    <span class="c"># 如果看不到安装帮助命令，可先执行 `exit` </span>
+<span class="o">[</span>core@localhost ~]<span class="nv">$ </span><span class="nb">sudo </span>coreos-installer <span class="nb">install</span> /dev/sda <span class="se">\</span>
+                    <span class="nt">--ignition-url</span> http://172.25.254.228:8080/ign/fcos36.ign <span class="se">\</span>
+                    <span class="nt">--insecure-ignition</span>
+</code></pre></div></div>
+<hr />
+<p><img src="/assets/images/2023-02-20/Snipaste_2023-02-20_16-22-44.png" alt="" /></p>
+
+<hr />
+<ul>
+  <li>安装结束，重启系统</li>
+</ul>
+
+<p><img src="/assets/images/2023-02-20/Snipaste_2023-02-20_16-27-07.png" alt="" /></p>
+
+<ul>
+  <li>登录界面</li>
+</ul>
+
+<p><img src="/assets/images/2023-02-20/Snipaste_2023-02-20_16-29-17.png" alt="" /></p>
+
+<h3 id="5-远程连接并验证结果">5. 远程连接并验证结果</h3>
+
+<ul>
+  <li>使用 SSH 私钥进行连接</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌💁  devops @ 💻  workstation <span class="k">in</span> 📁  ~
+└❯ ssh <span class="nt">-i</span> ~/.ssh/id_rsa core@172.25.254.221
+The authenticity of host <span class="s1">'172.25.254.221 (172.25.254.221)'</span> can<span class="s1">'t be established.
+ED25519 key fingerprint is SHA256:RmfcSQncM52Z6pn8acIrpXjsLpw167fDyiSjVKHCy0I.
+This key is not known by any other names
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '</span>172.25.254.221<span class="s1">' (ED25519) to the list of known hosts.
+Fedora CoreOS 37.20230122.3.0
+Tracker: https://github.com/coreos/fedora-coreos-tracker
+Discuss: https://discussion.fedoraproject.org/tag/coreos
+
+[core@fcos ~]$ 
+</span></code></pre></div></div>
+
+<ul>
+  <li>查看磁盘分区</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>core@fcos ~]<span class="nv">$ </span>lsblk
+NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+sda      8:0    0   20G  0 disk 
+├─sda1   8:1    0    1M  0 part 
+├─sda2   8:2    0  127M  0 part 
+├─sda3   8:3    0  384M  0 part /boot
+├─sda4   8:4    0    8G  0 part /sysroot/ostree/deploy/fedora-coreos/var
+│                               /usr
+│                               /etc
+│                               /
+│                               /sysroot
+└─sda5   8:5    0 11.5G  0 part /var/lib/containers/storage/overlay
+                                /var
+</code></pre></div></div>
+
+<ul>
+  <li>查看网络配置</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>core@fcos ~]<span class="nv">$ </span><span class="nb">hostname
+</span>fcos.xwanli0923.github.io
+<span class="o">[</span>core@fcos ~]<span class="nv">$ </span>ip addr show
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    <span class="nb">link</span>/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: ens160: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc mq state UP group default qlen 1000
+    <span class="nb">link</span>/ether 00:0c:29:d0:c3:a7 brd ff:ff:ff:ff:ff:ff
+    altname enp3s0
+    inet 172.25.254.221/24 brd 172.25.254.255 scope global dynamic noprefixroute ens160
+       valid_lft 151sec preferred_lft 151sec
+    inet6 fe80::6f14:2875:e850:8fd9/64 scope <span class="nb">link </span>noprefixroute 
+       valid_lft forever preferred_lft forever
+3: podman0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default qlen 1000
+    <span class="nb">link</span>/ether ce:16:23:ac:2f:1d brd ff:ff:ff:ff:ff:ff
+    inet 10.88.0.1/16 brd 10.88.255.255 scope global podman0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::9c82:7aff:fec2:5025/64 scope <span class="nb">link 
+       </span>valid_lft forever preferred_lft forever
+4: veth0@if2: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue master podman0 state UP group default qlen 1000
+    <span class="nb">link</span>/ether 32:35:08:f9:a6:c3 brd ff:ff:ff:ff:ff:ff link-netns netns-a5949274-3549-2bb7-7ce9-36465802458e
+    inet6 fe80::3035:8ff:fef9:a6c3/64 scope <span class="nb">link 
+       </span>valid_lft forever preferred_lft forever
+</code></pre></div></div>
+
+<ul>
+  <li>检查容器</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>core@fcos ~]<span class="nv">$ </span><span class="nb">sudo </span>podman ps 
+CONTAINER ID  IMAGE                           COMMAND           CREATED        STATUS            PORTS               NAMES
+3cec19adf88f  docker.io/library/httpd:latest  httpd-foreground  6 minutes ago  Up 6 minutes ago  0.0.0.0:80-&gt;80/tcp  mywebserver
+</code></pre></div></div>
+
+<ul>
+  <li>客户端访问</li>
+</ul>
+
+<p><img src="/assets/images/2023-02-20/Snipaste_2023-02-20_16-39-59.png" alt="" /></p>
+
+<hr />
+
+<p><em>参考文档：</em>
+<em>- <a href="https://docs.fedoraproject.org/en-US/fedora-coreos/bare-metal/">Fedora CoreOS裸金属安装</a></em></p>]]></content><author><name>邢万里</name></author><category term="linux container cloud-native" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">使用Kickstart自动化部署Linux操作系统</title><link href="http://localhost:4000/2023/02/13/Install-Linux-Using-Kickstart.html" rel="alternate" type="text/html" title="使用Kickstart自动化部署Linux操作系统" /><published>2023-02-13T00:00:00+08:00</published><updated>2023-02-13T00:00:00+08:00</updated><id>http://localhost:4000/2023/02/13/Install-Linux-Using-Kickstart</id><content type="html" xml:base="http://localhost:4000/2023/02/13/Install-Linux-Using-Kickstart.html"><![CDATA[<p><img src="/assets/images/2023-02-13/800px-DSC_3217.JPG" alt="Fedoraject-Anaconda-installer" /></p>
 
 <p><em>[图片来源：<a href="https://fedoraproject.org/wiki/File:DSC_3217.JPG">Fedora Wiki</a> ]</em></p>
 
@@ -285,7 +713,7 @@ Feb 14 00:39:35 hub.xwanli0923.github.io systemd[1]: Started DHCPv4 Server Daemo
 <span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo </span>firewall-cmd <span class="nt">--runtime-to-permanent</span>
 </code></pre></div></div>
 
-<h3 id="3-准备-tftp-服务器">3. 准备 TFTP 服务器</h3>
+<h3 id="4-准备-tftp-服务器">4. 准备 TFTP 服务器</h3>
 
 <ul>
   <li>安装 TFTP 服务器</li>
@@ -309,7 +737,7 @@ Feb 14 00:39:35 hub.xwanli0923.github.io systemd[1]: Started DHCPv4 Server Daemo
 <span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo </span>firewall-cmd <span class="nt">--runtime-to-permanent</span>
 </code></pre></div></div>
 
-<h3 id="4-准备自动应答文件kickstart">4. 准备自动应答文件kickstart</h3>
+<h3 id="5-准备自动应答文件kickstart">5. 准备自动应答文件kickstart</h3>
 
 <ul>
   <li>
@@ -380,7 +808,7 @@ Feb 14 00:39:35 hub.xwanli0923.github.io systemd[1]: Started DHCPv4 Server Daemo
 
 </code></pre></div></div>
 
-<h3 id="5-向-tftp中添加所需文件">5. 向 <code class="language-plaintext highlighter-rouge">TFTP</code>中添加所需文件</h3>
+<h3 id="6-向-tftp中添加所需文件">6. 向 <code class="language-plaintext highlighter-rouge">TFTP</code>中添加所需文件</h3>
 
 <ul>
   <li>安装 <code class="language-plaintext highlighter-rouge">TFTP Booting</code> 文件,并拷贝 <code class="language-plaintext highlighter-rouge">pxelinux.0</code>文件至 <code class="language-plaintext highlighter-rouge">/var/lib/tftpboot</code></li>
@@ -479,7 +907,7 @@ Feb 14 00:39:35 hub.xwanli0923.github.io systemd[1]: Started DHCPv4 Server Daemo
 <span class="err">menu</span> <span class="err">end</span>
 </code></pre></div></div>
 
-<h3 id="6-测试部署">6. 测试部署</h3>
+<h3 id="7-测试部署">7. 测试部署</h3>
 
 <ul>
   <li>使用 <code class="language-plaintext highlighter-rouge">UEFI</code> 引导</li>
@@ -510,7 +938,7 @@ Feb 14 00:39:35 hub.xwanli0923.github.io systemd[1]: Started DHCPv4 Server Daemo
 <hr />
 <p><img src="/assets/images/2023-02-13/Snipaste_2023-02-14_11-53-17.png" alt="" /></p>
 
-<h3 id="7-结语">7. 结语</h3>
+<h3 id="8-结语">8. 结语</h3>
 
 <p>本文主要以UEFI引导的配置为主，如果需要部署<code class="language-plaintext highlighter-rouge">Legacy MBR</code>的引导模式，需要您对<code class="language-plaintext highlighter-rouge">kickstart</code>文件进行调整；或者编写 <code class="language-plaintext highlighter-rouge">%pre ... %end</code>部分，判断系统引导模式，从而自动判断使用<code class="language-plaintext highlighter-rouge">EUFI</code>或<code class="language-plaintext highlighter-rouge">Legacy MBR</code> 。</p>
 

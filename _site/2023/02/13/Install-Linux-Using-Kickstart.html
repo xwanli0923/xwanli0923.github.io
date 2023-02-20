@@ -950,7 +950,7 @@ Feb 14 00:39:35 hub.xwanli0923.github.io systemd[1]: Started DHCPv4 Server Daemo
 <span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo </span>firewall-cmd <span class="nt">--runtime-to-permanent</span>
 </code></pre></div></div>
 
-<h3 id="3-准备-tftp-服务器">3. 准备 TFTP 服务器</h3>
+<h3 id="4-准备-tftp-服务器">4. 准备 TFTP 服务器</h3>
 
 <ul>
   <li>安装 TFTP 服务器</li>
@@ -974,7 +974,7 @@ Feb 14 00:39:35 hub.xwanli0923.github.io systemd[1]: Started DHCPv4 Server Daemo
 <span class="o">[</span>xwanli@hub.xwanli0923.github.io ~]<span class="nv">$ </span><span class="nb">sudo </span>firewall-cmd <span class="nt">--runtime-to-permanent</span>
 </code></pre></div></div>
 
-<h3 id="4-准备自动应答文件kickstart">4. 准备自动应答文件kickstart</h3>
+<h3 id="5-准备自动应答文件kickstart">5. 准备自动应答文件kickstart</h3>
 
 <ul>
   <li>
@@ -1047,7 +1047,7 @@ Feb 14 00:39:35 hub.xwanli0923.github.io systemd[1]: Started DHCPv4 Server Daemo
 
 </code></pre></div></div>
 
-<h3 id="5-向-tftp中添加所需文件">5. 向 <code class="language-plaintext highlighter-rouge">TFTP</code>中添加所需文件</h3>
+<h3 id="6-向-tftp中添加所需文件">6. 向 <code class="language-plaintext highlighter-rouge">TFTP</code>中添加所需文件</h3>
 
 <ul>
   <li>安装 <code class="language-plaintext highlighter-rouge">TFTP Booting</code> 文件,并拷贝 <code class="language-plaintext highlighter-rouge">pxelinux.0</code>文件至 <code class="language-plaintext highlighter-rouge">/var/lib/tftpboot</code>
@@ -1148,7 +1148,7 @@ Feb 14 00:39:35 hub.xwanli0923.github.io systemd[1]: Started DHCPv4 Server Daemo
 <span class="err">menu</span> <span class="err">end</span>
 </code></pre></div></div>
 
-<h3 id="6-测试部署">6. 测试部署</h3>
+<h3 id="7-测试部署">7. 测试部署</h3>
 
 <ul>
   <li>使用 <code class="language-plaintext highlighter-rouge">UEFI</code> 引导</li>
@@ -1179,7 +1179,7 @@ Feb 14 00:39:35 hub.xwanli0923.github.io systemd[1]: Started DHCPv4 Server Daemo
 <hr>
 <p><img src="/assets/images/2023-02-13/Snipaste_2023-02-14_11-53-17.png" alt=""></p>
 
-<h3 id="7-结语">7. 结语</h3>
+<h3 id="8-结语">8. 结语</h3>
 
 <p>本文主要以UEFI引导的配置为主，如果需要部署<code class="language-plaintext highlighter-rouge">Legacy MBR</code>的引导模式，需要您对<code class="language-plaintext highlighter-rouge">kickstart</code>文件进行调整；或者编写 <code class="language-plaintext highlighter-rouge">%pre ... %end</code>部分，判断系统引导模式，从而自动判断使用<code class="language-plaintext highlighter-rouge">EUFI</code>或<code class="language-plaintext highlighter-rouge">Legacy MBR</code> 。</p>
 
@@ -1202,20 +1202,15 @@ Feb 14 00:39:35 hub.xwanli0923.github.io systemd[1]: Started DHCPv4 Server Daemo
 
 </article>
 <div class="post-nav">
-<a class="previous" href="/2022/12/25/reset-root-password.html" title="在红帽企业版Linux9中如何重置ROOT密码">在红帽企业版Linux9中如何重置ROOT密码</a><span></span>
+<a class="previous" href="/2022/12/25/reset-root-password.html" title="在红帽企业版Linux9中如何重置ROOT密码">在红帽企业版Linux9中如何重置ROOT密码</a><a class="next" href="/2023/02/20/running-a-container-with-fcos.html" title="在 Fedora CoreOS 中运行容器">在 Fedora CoreOS 中运行容器</a>
 </div>
 <div class="post-related">
       <div>相关文章</div>
       <ul>
-        <li><a class="post-link" href="/2023/02/13/Install-Linux-Using-Kickstart.html" title="">使用Kickstart自动化部署Linux操作系统</a></li>
-<<<<<<< Updated upstream
-<li><a class="post-link" href="/2022/11/29/how-to-uninstall-ansible-tower.html" title="">如何卸载 Ansible Tower</a></li>
-<li><a class="post-link" href="/2022/12/19/preparing-for-ceph-cluster-deployment.html" title="">部署CEPH集群前的准备工作</a></li>
-=======
-<li><a class="post-link" href="/2022/12/25/reset-root-password.html" title="">在红帽企业版Linux9中如何重置ROOT密码</a></li>
-<li><a class="post-link" href="/2022/11/29/how-to-uninstall-ansible-tower.html" title="">如何卸载 Ansible Tower</a></li>
->>>>>>> Stashed changes
-<li><a class="post-link" href="/2022/12/21/deploying-ceph-cluster.html" title="">开始部署 CEPH 集群</a></li>
+        <li><a class="post-link" href="/2023/02/20/running-a-container-with-fcos.html" title="在 Fedora CoreOS 中运行容器">在 Fedora CoreOS 中运行容器</a></li>
+<li><a class="post-link" href="/2022/12/25/reset-root-password.html" title="在 Fedora CoreOS 中运行容器">在红帽企业版Linux9中如何重置ROOT密码</a></li>
+<li><a class="post-link" href="/2022/12/19/preparing-for-ceph-cluster-deployment.html" title="在 Fedora CoreOS 中运行容器">部署CEPH集群前的准备工作</a></li>
+<li><a class="post-link" href="/2022/12/21/deploying-ceph-cluster.html" title="在 Fedora CoreOS 中运行容器">开始部署 CEPH 集群</a></li>
 </ul>
     </div>
 <div class="post-comments"></div></section>

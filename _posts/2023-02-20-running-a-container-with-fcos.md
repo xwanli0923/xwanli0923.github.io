@@ -2,7 +2,7 @@
 layout: post
 title: "在 Fedora CoreOS 中运行容器"
 date: 2023-02-20
-tag: linux container cloud-native
+tag: cloud-native
 ---
 
 ![Fedoraject-Anaconda-installer](/assets/images/2023-02-20/welcomefedoracoreos.jpg)

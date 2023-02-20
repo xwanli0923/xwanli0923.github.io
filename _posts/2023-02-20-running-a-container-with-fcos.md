@@ -25,7 +25,7 @@ Fedora CoreOS is an automatically updating, minimal, monolithic, container-focus
 
 # 准备工作
 
-您需要实现准备一台和将来部署 **FCOS** 能够通信的一个 web 服务器，用用于存放 **ignition** 文件。
+您需要事先准备一台和将来部署 **FCOS** 能够通信的一个 web 服务器，用用于存放 **ignition** 文件。
 
 - 我这里使用的一台桌面版本 Linux 发行版：**Linux Mint 21.1**
 
